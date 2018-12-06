@@ -1,0 +1,6 @@
+CREATE INDEX dix_high_tide_comp_20p_platform ON agdc.dataset USING btree (((metadata #>> '{platform,code}'::text[]))) WHERE ((archived IS NULL) AND (dataset_type_ref = 63))
+CREATE INDEX dix_high_tide_comp_count_platform ON agdc.dataset USING btree (((metadata #>> '{platform,code}'::text[]))) WHERE ((archived IS NULL) AND (dataset_type_ref = 64))
+CREATE INDEX dix_item_v2_platform ON agdc.dataset USING btree (((metadata #>> '{platform,code}'::text[]))) WHERE ((archived IS NULL) AND (dataset_type_ref = 67))
+CREATE INDEX dix_item_v2_conf_platform ON agdc.dataset USING btree (((metadata #>> '{platform,code}'::text[]))) WHERE ((archived IS NULL) AND (dataset_type_ref = 68))
+CREATE INDEX dix_low_tide_comp_20p_platform ON agdc.dataset USING btree (((metadata #>> '{platform,code}'::text[]))) WHERE ((archived IS NULL) AND (dataset_type_ref = 65))
+CREATE INDEX dix_low_tide_comp_count_platform ON agdc.dataset USING btree (((metadata #>> '{platform,code}'::text[]))) WHERE ((archived IS NULL) AND (dataset_type_ref = 66))

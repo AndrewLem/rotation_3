@@ -1,0 +1,14 @@
+-- auto-generated definition
+create index dix_%s_sat_path_sat_row_time
+  on dataset (numrange((metadata #>> '{image,satellite_ref_point_start,x}'::text[])::numeric,
+                       GREATEST((metadata #>> '{image,satellite_ref_point_end,x}'::text[])::numeric,
+                                (metadata #>> '{image,satellite_ref_point_start,x}'::text[])::numeric), '[]'::text),
+              numrange((metadata #>> '{image,satellite_ref_point_start,y}'::text[])::numeric,
+                       GREATEST((metadata #>> '{image,satellite_ref_point_end,y}'::text[])::numeric,
+                                (metadata #>> '{image,satellite_ref_point_start,y}'::text[])::numeric), '[]'::text),
+              tstzrange(LEAST(agdc.common_timestamp(metadata #>> '{extent,from_dt}'::text[]),
+                              agdc.common_timestamp(metadata #>> '{extent,center_dt}'::text[])),
+                        GREATEST(agdc.common_timestamp(metadata #>> '{extent,to_dt}'::text[]),
+                                 agdc.common_timestamp(metadata #>> '{extent,center_dt}'::text[])), '[]'::text))
+  where ((archived IS NULL) AND (dataset_type_ref = %d));
+

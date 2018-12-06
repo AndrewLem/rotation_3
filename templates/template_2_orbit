@@ -1,0 +1,5 @@
+-- auto-generated definition
+create index dix_%s_orbit
+  on dataset ((metadata #>> '{acquisition,platform_orbit}'::text[]))
+  where ((archived IS NULL) AND (dataset_type_ref = %d));
+

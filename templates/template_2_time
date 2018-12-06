@@ -1,0 +1,6 @@
+-- auto-generated definition
+create index dix_%s_time
+  on dataset (tstzrange(agdc.common_timestamp(metadata #>> '{acquisition,aos}'::text[]),
+                        agdc.common_timestamp(metadata #>> '{acquisition,los}'::text[]), '[]'::text))
+  where ((archived IS NULL) AND (dataset_type_ref = %d));
+

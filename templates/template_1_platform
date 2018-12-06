@@ -1,0 +1,5 @@
+-- auto-generated definition
+create index dix_%s_platform
+  on dataset ((metadata #>> '{platform,code}'::text[]))
+  where ((archived IS NULL) AND (dataset_type_ref = %d));
+

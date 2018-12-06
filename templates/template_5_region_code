@@ -1,0 +1,5 @@
+-- auto-generated definition
+create index dix_%s_region_code
+  on dataset ((metadata #>> '{provider,reference_code}'::text[]))
+  where ((archived IS NULL) AND (dataset_type_ref = %d));
+
