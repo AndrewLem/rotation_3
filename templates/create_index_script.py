@@ -99,7 +99,7 @@ with psycopg2.connect(host="localhost",
     identify_template_targets_and_missing_indexes(conn, templates_to_collect, products_missing_indexes)
     collect_templates(conn, templates_to_collect, templates_dict)
 
-# for each product missing one or more indexex
+# for each product missing one or more indexes
 for product_missing_indexes in products_missing_indexes:
     product_name = product_missing_indexes['product_name']
     dataset_type_ref = product_missing_indexes['dataset_type_ref']
