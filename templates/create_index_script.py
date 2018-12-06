@@ -1,8 +1,37 @@
 import psycopg2
 
 
+def main():
+    templates_dict = {}
+
+    with psycopg2.connect(host="localhost",
+                          database="datacube",
+                          port=9999,
+                          user='al6701') as conn:
+        templates_to_collect, products_missing_indexes = identify_template_targets_and_missing_indexes(conn)
+        collect_templates(conn, templates_to_collect, templates_dict)
+
+    # for each product missing one or more indexes
+    for product_missing_indexes in products_missing_indexes:
+        product_name = product_missing_indexes['product_name']
+        dataset_type_ref = product_missing_indexes['dataset_type_ref']
+        metadata_type_ref = product_missing_indexes['metadata_type_ref']
+        missing_indexes = product_missing_indexes['missing_indexes']
+
+        # for each missing index for the product
+        for missing_index in missing_indexes:
+            create_sql_statement(templates_dict, metadata_type_ref, missing_index, product_name, dataset_type_ref)
+
+
 # populates templates_to_collect list and products_missing_indexes list
-def identify_template_targets_and_missing_indexes(connection, templates_to_collect, products_missing_indexes):
+def identify_template_targets_and_missing_indexes(connection):
+    """
+
+    :param connection:
+    :return:
+    """
+    templates_to_collect = []
+    products_missing_indexes = []
     with connection.cursor() as cur:
         cur.execute("""
                 with for_counting as (
@@ -44,12 +73,20 @@ def identify_template_targets_and_missing_indexes(connection, templates_to_colle
             elif index_type_count < current_index_count_max:
                 missing_indexes = [index for index in current_index_types if index not in index_types]
                 products_missing_indexes.append({'product_name': product_name, 'dataset_type_ref': dataset_type_ref,
-                                             'metadata_type_ref': metadata_type_ref,
-                                             'missing_indexes': missing_indexes})
+                                                 'metadata_type_ref': metadata_type_ref,
+                                                 'missing_indexes': missing_indexes})
+    return templates_to_collect, products_missing_indexes
 
 
 # collect templates from database using templates_to_collect list
 def collect_templates(connection, templates_to_collect, templates_dict):
+    """
+
+    :param connection:
+    :param templates_to_collect:
+    :param templates_dict:
+    :return:
+    """
 
     for index_details in templates_to_collect:
         product_name = index_details['product_name']
@@ -88,25 +125,5 @@ def create_sql_statement(templates_dict, metadata_type_ref, index_type, product_
     f.close()
 
 
-templates_to_collect = []
-products_missing_indexes = []
-templates_dict = {}
-
-with psycopg2.connect(host="localhost",
-                      database="datacube",
-                      port=9999,
-                      user='al6701') as conn:
-    identify_template_targets_and_missing_indexes(conn, templates_to_collect, products_missing_indexes)
-    collect_templates(conn, templates_to_collect, templates_dict)
-
-# for each product missing one or more indexes
-for product_missing_indexes in products_missing_indexes:
-    product_name = product_missing_indexes['product_name']
-    dataset_type_ref = product_missing_indexes['dataset_type_ref']
-    metadata_type_ref = product_missing_indexes['metadata_type_ref']
-    missing_indexes = product_missing_indexes['missing_indexes']
-
-    # for each missing index for the product
-    for missing_index in missing_indexes:
-        create_sql_statement(templates_dict, metadata_type_ref, missing_index, product_name, dataset_type_ref)
-
+if __name__ == '__main__':
+    main()

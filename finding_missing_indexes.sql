@@ -62,10 +62,10 @@ with for_counting as (
       ),
       table_io as (
         select psiut.relname,
-               sum(psiut.heap_blks_read)                                                                    as table_page_read,
-               sum(psiut.heap_blks_hit)                                                                     as table_page_hit,
+               sum(psiut.heap_blks_read) as table_page_read,
+               sum(psiut.heap_blks_hit) as table_page_hit,
                sum(psiut.heap_blks_hit) /
-               greatest(1, sum(psiut.heap_blks_hit) + sum(psiut.heap_blks_read))                            as table_hit_ratio
+               greatest(1, sum(psiut.heap_blks_hit) + sum(psiut.heap_blks_read)) as table_hit_ratio
         from pg_statio_user_tables psiut
         group by psiut.relname
         order by table_page_read desc
@@ -73,7 +73,7 @@ with for_counting as (
       index_io as (
         select psiui.relname,
                psiui.indexrelname,
-               sum(psiui.idx_blks_read)                                                                          as idx_page_read,
+               sum(psiui.idx_blks_read) as idx_page_read,
                sum(psiui.idx_blks_hit)                                                                           as idx_page_hit,
                1.0 * sum(psiui.idx_blks_hit) /
                greatest(1.0, sum(psiui.idx_blks_hit) + sum(psiui.idx_blks_read))                                 as idx_hit_ratio
