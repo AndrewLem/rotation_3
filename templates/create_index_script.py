@@ -3,7 +3,6 @@ import psycopg2
 
 # populates templates_to_collect list and missing_indexes list
 def identify_template_targets_and_missing_indexes(connection, templates_to_collect, missing_indexes_list):
-    print('Running identify_template_targets_and_missing_indexes...')
     with connection.cursor() as cur:
         cur.execute("""
                 with for_counting as (
@@ -31,7 +30,6 @@ def identify_template_targets_and_missing_indexes(connection, templates_to_colle
                 group by dataset_type_ref, name, metadata_type_ref
                 order by metadata_type_ref, count desc, index_attributes;
             """)
-        print('Query complete!')
 
         current_metadata_type_ref = -1
         current_index_count_max = -1
@@ -52,7 +50,6 @@ def identify_template_targets_and_missing_indexes(connection, templates_to_colle
 
 # collect templates from database
 def collect_templates(connection, templates_to_collect, templates_dict):
-    print('Running collect_templates...')
 
     for index_details in templates_to_collect:
         product_name = index_details['product_name']
@@ -95,12 +92,10 @@ templates_to_collect = []
 missing_indexes_list = []
 templates_dict = {}
 
-print('Connecting to database...')
 with psycopg2.connect(host="localhost",
                       database="datacube",
                       port=9999,
                       user='al6701') as conn:
-    print('Connected!')
     identify_template_targets_and_missing_indexes(conn, templates_to_collect, missing_indexes_list)
     collect_templates(conn, templates_to_collect, templates_dict)
 
