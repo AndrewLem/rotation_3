@@ -1,3 +1,27 @@
+with index_info as (
+    select indexname,
+        to_number(substring(indexdef from 'dataset_type_ref = (.*)\)\)'), '000') as "dataset_type_ref"
+    from pg_indexes
+    where schemaname = 'agdc'
+    and tablename = 'dataset'
+    and indexname like 'dix%'
+),
+dataset_type_info as (
+    select id, name, metadata_type_ref
+    from agdc.dataset_type
+)
+select dataset_type_ref, name, metadata_type_ref,
+    substring(indexname from 'dix_'||name||'_(.*)') as "index_attributes"
+from index_info i
+       left outer join dataset_type_info t
+                       on i.dataset_type_ref = t.id
+order by index_attributes;
+
+
+
+---------------------------------------------------------------------------------
+
+
 with for_counting as (
   with index_info as (
     select indexname,
@@ -18,10 +42,10 @@ with for_counting as (
                            on i.dataset_type_ref = t.id
     order by index_attributes
 )
-select name, metadata_type_ref, count(*) as "count", array_agg(index_attributes) as "index_attributes"
+select dataset_type_ref, name, metadata_type_ref, count(*) as "count", array_agg(index_attributes) as "index_attributes"
 from for_counting
-group by name, metadata_type_ref
-order by metadata_type_ref, count, index_attributes;
+group by dataset_type_ref, name, metadata_type_ref
+order by metadata_type_ref, count desc, index_attributes;
 
 
 -----------------------------------------------------------------------------------
