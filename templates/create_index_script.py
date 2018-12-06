@@ -48,6 +48,7 @@ with psycopg2.connect(host="localhost",
         """)
         print('Query complete!')
         print(cur.fetchall())
+        print('laptop test works!')
 
         #
         # current_metadata_type_ref = -1
