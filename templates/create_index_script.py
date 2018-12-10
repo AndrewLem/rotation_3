@@ -2,14 +2,12 @@ import psycopg2
 
 
 def main():
-    templates_dict = {}
-
     with psycopg2.connect(host="localhost",
                           database="datacube",
                           port=9999,
                           user='al6701') as conn:
         templates_to_collect, products_missing_indexes = identify_template_targets_and_missing_indexes(conn)
-        collect_templates(conn, templates_to_collect, templates_dict)
+        templates_dict = collect_templates(conn, templates_to_collect)
 
     # for each product missing one or more indexes
     for product_missing_indexes in products_missing_indexes:
@@ -28,7 +26,7 @@ def identify_template_targets_and_missing_indexes(connection):
     """
 
     :param connection:
-    :return:
+    :return: templates_to_collect, products_missing_indexes
     """
     templates_to_collect = []
     products_missing_indexes = []
@@ -79,14 +77,15 @@ def identify_template_targets_and_missing_indexes(connection):
 
 
 # collect templates from database using templates_to_collect list
-def collect_templates(connection, templates_to_collect, templates_dict):
+def collect_templates(connection, templates_to_collect):
     """
 
     :param connection:
     :param templates_to_collect:
-    :param templates_dict:
-    :return:
+    :return: templates_dict
     """
+
+    templates_dict = {}
 
     for index_details in templates_to_collect:
         product_name = index_details['product_name']
@@ -103,6 +102,8 @@ def collect_templates(connection, templates_to_collect, templates_dict):
 
                 add_index_template(templates_dict, metadata_type_ref, index_type,
                                    product_name, dataset_type_ref, index_example_string)
+
+    return templates_dict
 
 
 # adds an index template to a templates dictionary
