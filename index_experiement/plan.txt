@@ -1,0 +1,9 @@
+1) identify slow queries that other people have encountered
+   (or applications that have to update their own database from the original database)
+2) elaborate on the queries' requirements and scope
+   (per product, metadata_type, all datasets)
+Experiments on local database:
+1) measure values before creating index (query and insert times, database size)
+2) create an index that improves query time
+3) measure values after creating index
+4) develop case for creation or reason not to create respective indexes
