@@ -38,7 +38,7 @@ Result  (cost=55.94..55.95 rows=1 width=8)
 
 [2018-12-13 13:28:22] 1 row retrieved starting from 1 in 52 s 464 ms (execution: 52 s 448 ms, fetching: 16 ms)
 
-after dataset_type_ref, ul_lat index
+after creating index: dataset_type_ref, ul_lat
 [2018-12-13 14:08:03] 1 row retrieved starting from 1 in 93 ms (execution: 62 ms, fetching: 31 ms)
  */
 
@@ -58,6 +58,53 @@ Aggregate  (cost=2313148.93..2313148.94 rows=1 width=8)
 [2018-12-13 13:30:42] 1 row retrieved starting from 1 in 1 m 45 s 523 ms (execution: 1 m 45 s 507 ms, fetching: 16 ms)
 
 [2018-12-13 14:10:27] 1 row retrieved starting from 1 in 1 m 44 s 354 ms (execution: 1 m 44 s 342 ms, fetching: 12 ms)
+
+after creating index: dataset_type_ref, ur_lat
+[2018-12-13 14:47:08] 1 row retrieved starting from 1 in 125 ms (execution: 109 ms, fetching: 16 ms)
+ */
+
+
+select
+       max((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision) as ul_lats,
+       max((metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision) as ur_lats
+from agdc.dataset
+where (archived is null) and dataset_type_ref = 70;
+
+/*
+
+sql> create index dix_0dataset_type_ur_lat
+       on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision))
+       where (archived IS NULL)
+[2018-12-13 14:42:55] completed in 27 m 24 s 797 ms
+sql> select
+            min((metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision) as ur_lats
+     from agdc.dataset
+     where (archived is null) and dataset_type_ref = 69
+[2018-12-13 14:47:08] 1 row retrieved starting from 1 in 125 ms (execution: 109 ms, fetching: 16 ms)
+sql> select
+            min((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision) as ul_lats,
+            min((metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision) as ur_lats
+     from agdc.dataset
+     where (archived is null) and dataset_type_ref = 69
+[2018-12-13 14:50:29] 1 row retrieved starting from 1 in 78 ms (execution: 47 ms, fetching: 31 ms)
+sql> select
+            max((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision) as ul_lats,
+            max((metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision) as ur_lats
+     from agdc.dataset
+     where (archived is null) and dataset_type_ref = 69
+[2018-12-13 14:51:44] 1 row retrieved starting from 1 in 110 ms (execution: 94 ms, fetching: 16 ms)
+sql> select
+            max((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision) as ul_lats,
+            max((metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision) as ur_lats
+     from agdc.dataset
+     where (archived is null) and dataset_type_ref = 6
+[2018-12-13 14:52:45] 1 row retrieved starting from 1 in 93 ms (execution: 78 ms, fetching: 15 ms)
+sql> select
+            max((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision) as ul_lats,
+            max((metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision) as ur_lats
+     from agdc.dataset
+     where (archived is null) and dataset_type_ref = 70
+[2018-12-13 14:53:16] 1 row retrieved starting from 1 in 359 ms (execution: 328 ms, fetching: 31 ms)
 
  */
 
