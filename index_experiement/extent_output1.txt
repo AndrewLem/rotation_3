@@ -1,0 +1,990 @@
+dataset_type: 36
+size: 41591
+total_time: 1.1732001304626465
+query_time: 1.0852000713348389
+sort_time: 0.08800005912780762
+ul_lat_min:-9.975
+ul_lat_max:-9.975
+ur_lat_min:-9.975
+ur_lat_max:-9.975
+ll_lat_min:-44.525
+ll_lat_max:-44.525
+lr_lat_min:-44.525
+lr_lat_max:-44.525
+
+
+dataset_type: 88
+size: 1244
+total_time: 0.12299990653991699
+query_time: 0.1100001335144043
+sort_time: 0.012999773025512695
+ul_lat_min:-44.0054006200445
+ul_lat_max:-9.89422171343202
+ur_lat_min:-43.87816814195
+ur_lat_max:-9.84937640363945
+ll_lat_min:-44.9351287319957
+ll_lat_max:-10.0005816312978
+lr_lat_min:-44.8058881458062
+lr_lat_max:-10.0005816312978
+
+
+dataset_type: 32
+size: 1
+total_time: 0.015000104904174805
+query_time: 0.015000104904174805
+sort_time: 0.0
+ul_lat_min:-10.00013889
+ul_lat_max:-10.00013889
+ur_lat_min:-10.00013889
+ur_lat_max:-10.00013889
+ll_lat_min:-44.000138890272
+ll_lat_max:-44.000138890272
+lr_lat_min:-44.000138890272
+lr_lat_max:-44.000138890272
+
+
+dataset_type: 53
+size: 3
+total_time: 0.01399993896484375
+query_time: 0.01399993896484375
+sort_time: 0.0
+ul_lat_min:-9.0005
+ul_lat_max:-9.0005
+ur_lat_min:-9.0005
+ur_lat_max:-9.0005
+ll_lat_min:-43.7615
+ll_lat_max:-43.7615
+lr_lat_min:-43.7615
+lr_lat_max:-43.7615
+
+
+dataset_type: 63
+size: 306
+total_time: 0.06699991226196289
+query_time: 0.06699991226196289
+sort_time: 0.0
+ul_lat_min:-42.8561227567407
+ul_lat_max:-10.3099730782225
+ur_lat_min:-42.748632141909
+ur_lat_max:-10.2371048142508
+ll_lat_min:-43.8291965530654
+ll_lat_max:-10.5377458441173
+lr_lat_min:-43.7199987877145
+lr_lat_max:-10.4865194465433
+
+
+dataset_type: 64
+size: 306
+total_time: 0.06099987030029297
+query_time: 0.059999942779541016
+sort_time: 0.0009999275207519531
+ul_lat_min:-42.8561227567407
+ul_lat_max:-10.3099730782225
+ur_lat_min:-42.748632141909
+ur_lat_max:-10.2371048142508
+ll_lat_min:-43.8291965530654
+ll_lat_max:-10.5377458441173
+lr_lat_min:-43.7199987877145
+lr_lat_max:-10.4865194465433
+
+
+dataset_type: 67
+size: 387
+total_time: 0.04800009727478027
+query_time: 0.04700016975402832
+sort_time: 0.0009999275207519531
+ul_lat_min:-43.2568462313356
+ul_lat_max:-10.3099730782225
+ur_lat_min:-43.1827906722973
+ur_lat_max:-10.2371048142508
+ll_lat_min:-43.8291965530654
+ll_lat_max:-10.5377458441173
+lr_lat_min:-43.7199987877145
+lr_lat_max:-10.4865194465433
+
+
+dataset_type: 68
+size: 414
+total_time: 0.05200004577636719
+query_time: 0.04999995231628418
+sort_time: 0.002000093460083008
+ul_lat_min:-43.2568462313356
+ul_lat_max:-10.3099730782225
+ur_lat_min:-43.1827906722973
+ur_lat_max:-10.2371048142508
+ll_lat_min:-43.8291965530654
+ll_lat_max:-10.5377458441173
+lr_lat_min:-43.7199987877145
+lr_lat_max:-10.4865194465433
+
+
+dataset_type: 65
+size: 307
+total_time: 0.06200003623962402
+query_time: 0.06099987030029297
+sort_time: 0.0010001659393310547
+ul_lat_min:-42.8561227567407
+ul_lat_max:-10.3099730782225
+ur_lat_min:-42.748632141909
+ur_lat_max:-10.2371048142508
+ll_lat_min:-43.8291965530654
+ll_lat_max:-10.5377458441173
+lr_lat_min:-43.7199987877145
+lr_lat_max:-10.4865194465433
+
+
+dataset_type: 66
+size: 307
+total_time: 0.11500000953674316
+query_time: 0.11400008201599121
+sort_time: 0.0009999275207519531
+ul_lat_min:-42.8561227567407
+ul_lat_max:-10.3099730782225
+ur_lat_min:-42.748632141909
+ur_lat_max:-10.2371048142508
+ll_lat_min:-43.8291965530654
+ll_lat_max:-10.5377458441173
+lr_lat_min:-43.7199987877145
+lr_lat_max:-10.4865194465433
+
+
+dataset_type: 69
+size: 1171400
+total_time: 37.92120003700256
+query_time: 35.857199907302856
+sort_time: 2.064000129699707
+ul_lat_min:-44.1399156133632
+ul_lat_max:-8.15483664846683
+ur_lat_min:-44.1241008116356
+ur_lat_max:-8.08024602380691
+ll_lat_min:-44.2637658735323
+ll_lat_max:-8.38953412973827
+lr_lat_min:-44.215015382263
+lr_lat_max:-8.36070775892462
+
+
+dataset_type: 6
+size: 1178058
+total_time: 38.223000049591064
+query_time: 35.88599991798401
+sort_time: 2.3370001316070557
+ul_lat_min:-44.1399156133632
+ul_lat_max:-8.15483664846681
+ur_lat_min:-44.1241008116356
+ur_lat_max:-8.08024602380692
+ll_lat_min:-44.2637658735323
+ll_lat_max:-8.38953412973829
+lr_lat_min:-44.215015382263
+lr_lat_max:-8.36070775892461
+
+
+dataset_type: 26
+size: 1177828
+total_time: 37.35599994659424
+query_time: 35.009000062942505
+sort_time: 2.3469998836517334
+ul_lat_min:-44.1399156133632
+ul_lat_max:-8.15483664846681
+ur_lat_min:-44.1241008116356
+ur_lat_max:-8.08024602380692
+ll_lat_min:-44.2637658735323
+ll_lat_max:-8.38953412973829
+lr_lat_min:-44.215015382263
+lr_lat_max:-8.36070775892461
+
+
+dataset_type: 83
+size: 26512
+total_time: 13.101000308990479
+query_time: 12.805000305175781
+sort_time: 0.29600000381469727
+ul_lat_min:-44.1399156133632
+ul_lat_max:-8.31382909931054
+ur_lat_min:-44.1241008116356
+ur_lat_max:-8.36421809700596
+ll_lat_min:-44.2637658735323
+ll_lat_max:-9.17231780291233
+lr_lat_min:-44.1723774592103
+lr_lat_max:-9.17974075598942
+
+
+dataset_type: 23
+size: 1133031
+total_time: 75.01099991798401
+query_time: 72.97399973869324
+sort_time: 2.0370001792907715
+ul_lat_min:-44.1367347209565
+ul_lat_max:-8.16548037528758
+ur_lat_min:-44.1241008116356
+ur_lat_max:-8.08168272497729
+ll_lat_min:-44.2468180841158
+ll_lat_max:-8.38953412973829
+lr_lat_min:-44.2004986097232
+lr_lat_max:-8.36168461784583
+
+
+dataset_type: 94
+size: 0
+total_time: 0.1359999179840088
+query_time: 0.02499985694885254
+sort_time: 0.11100006103515625
+ul_lat_min:0
+ul_lat_max:0
+ur_lat_min:0
+ur_lat_max:0
+ll_lat_min:0
+ll_lat_max:0
+lr_lat_min:0
+lr_lat_max:0
+
+
+dataset_type: 70
+size: 1323682
+total_time: 377.94780015945435
+query_time: 375.5557999610901
+sort_time: 2.392000198364258
+ul_lat_min:-44.1171853440509
+ul_lat_max:-9.15124053817711
+ur_lat_min:-44.0859081549613
+ur_lat_max:-9.0525380935296
+ll_lat_min:-44.2570118765249
+ll_lat_max:-9.1766035724535
+lr_lat_min:-44.159405104438
+lr_lat_max:-9.17882229364053
+
+
+dataset_type: 21
+size: 1364305
+total_time: 265.16299962997437
+query_time: 262.46599984169006
+sort_time: 2.6969997882843018
+ul_lat_min:-44.1171853440509
+ul_lat_max:-9.15124053817707
+ur_lat_min:-44.0859081549612
+ur_lat_max:-9.05253809352964
+ll_lat_min:-44.2570118765249
+ll_lat_max:-9.1766035724535
+lr_lat_min:-44.159405104438
+lr_lat_max:-9.17882229364057
+
+
+dataset_type: 29
+size: 1357350
+total_time: 296.61239981651306
+query_time: 293.91239976882935
+sort_time: 2.700000047683716
+ul_lat_min:-44.1171853440509
+ul_lat_max:-9.15124053817707
+ur_lat_min:-44.0859081549612
+ur_lat_max:-9.05253809352964
+ll_lat_min:-44.2570118765249
+ll_lat_max:-9.1766035724535
+lr_lat_min:-44.159405104438
+lr_lat_max:-9.17882229364057
+
+
+dataset_type: 82
+size: 20667
+total_time: 24.478999853134155
+query_time: 24.164000034332275
+sort_time: 0.3149998188018799
+ul_lat_min:-44.1171853440509
+ul_lat_max:-9.08470020850397
+ur_lat_min:-44.0054006200445
+ur_lat_max:-9.0525380935296
+ll_lat_min:-44.2570118765249
+ll_lat_max:-9.1766035724535
+lr_lat_min:-44.1556575375201
+lr_lat_max:-9.18861657493247
+
+
+dataset_type: 22
+size: 1316846
+total_time: 148.63379979133606
+query_time: 146.29579973220825
+sort_time: 2.3380000591278076
+ul_lat_min:-44.1169500478271
+ul_lat_max:-9.15958275468013
+ur_lat_min:-44.0918214235591
+ur_lat_max:-9.05352564354747
+ll_lat_min:-44.2516505257193
+ll_lat_max:-9.18103942980772
+lr_lat_min:-44.1518863507836
+lr_lat_max:-9.18282417094515
+
+
+dataset_type: 95
+size: 0
+total_time: 0.15700006484985352
+query_time: 0.029000043869018555
+sort_time: 0.12800002098083496
+ul_lat_min:0
+ul_lat_max:0
+ur_lat_min:0
+ur_lat_max:0
+ll_lat_min:0
+ll_lat_max:0
+lr_lat_min:0
+lr_lat_max:0
+
+
+dataset_type: 98
+size: 1040
+total_time: 0.3579998016357422
+query_time: 0.3539998531341553
+sort_time: 0.003999948501586914
+ul_lat_min:-43.4064822361804
+ul_lat_max:-8.854658718293
+ur_lat_min:-43.3065385543255
+ur_lat_max:-8.82674793398043
+ll_lat_min:-44.3357065215098
+ll_lat_max:-9.08738563889882
+lr_lat_min:-44.2342184871416
+lr_lat_max:-9.06787170426828
+
+
+dataset_type: 71
+size: 593031
+total_time: 182.621600151062
+query_time: 181.54860019683838
+sort_time: 1.0729999542236328
+ul_lat_min:-45.3616869783405
+ul_lat_max:-9.06240671241721
+ur_lat_min:-45.270711692348
+ur_lat_max:-8.95543186550448
+ll_lat_min:-45.761684927317
+ll_lat_max:-9.07387873298954
+lr_lat_min:-45.6562491520258
+lr_lat_max:-9.07372266700199
+
+
+dataset_type: 19
+size: 696974
+total_time: 220.35260009765625
+query_time: 219.06719994544983
+sort_time: 1.285400152206421
+ul_lat_min:-45.3616869783405
+ul_lat_max:-9.06240671241721
+ur_lat_min:-45.270711692348
+ur_lat_max:-8.95543186550448
+ll_lat_min:-45.761684927317
+ll_lat_max:-9.0738787329896
+lr_lat_min:-45.6562491520258
+lr_lat_max:-9.07372266700199
+
+
+dataset_type: 60
+size: 802
+total_time: 0.3919999599456787
+query_time: 0.28079986572265625
+sort_time: 0.11120009422302246
+ul_lat_min:-44.2676651683129
+ul_lat_max:-9.06320923773566
+ur_lat_min:-44.2342184871416
+ur_lat_max:-9.00646304385935
+ll_lat_min:-44.3706784372072
+ll_lat_max:-9.43533022554675
+lr_lat_min:-44.3371738419457
+lr_lat_max:-9.34272151277601
+
+
+dataset_type: 57
+size: 108
+total_time: 0.062399864196777344
+query_time: 0.062399864196777344
+sort_time: 0.0
+ul_lat_min:-43.640567
+ul_lat_max:-9.072133
+ur_lat_min:-43.675254
+ur_lat_max:-9.068207
+ll_lat_min:-44.304424
+ll_lat_max:-11.121485
+lr_lat_min:-44.33992
+lr_lat_max:-11.115647
+
+
+dataset_type: 28
+size: 679506
+total_time: 182.20320010185242
+query_time: 180.98720002174377
+sort_time: 1.2160000801086426
+ul_lat_min:-45.3616869783405
+ul_lat_max:-9.06240671241721
+ur_lat_min:-45.270711692348
+ur_lat_max:-8.95543186550448
+ll_lat_min:-45.761684927317
+ll_lat_max:-9.0738787329896
+lr_lat_min:-45.6562491520258
+lr_lat_max:-9.07372266700199
+
+
+dataset_type: 81
+size: 6466
+total_time: 7.466000080108643
+query_time: 7.343000173568726
+sort_time: 0.12299990653991699
+ul_lat_min:-45.2738847479402
+ul_lat_max:-8.98847399895666
+ur_lat_min:-45.270711692348
+ur_lat_max:-8.95602740862176
+ll_lat_min:-45.7601776241495
+ll_lat_max:-9.07946481796743
+lr_lat_min:-45.6471368649486
+lr_lat_max:-9.07713633273149
+
+
+dataset_type: 61
+size: 780
+total_time: 0.10000014305114746
+query_time: 0.09600019454956055
+sort_time: 0.003999948501586914
+ul_lat_min:-44.2676651683129
+ul_lat_max:-9.06320923773566
+ur_lat_min:-44.2342184871416
+ur_lat_max:-9.00646304385935
+ll_lat_min:-44.3706784372072
+ll_lat_max:-9.43533022554675
+lr_lat_min:-44.3371738419457
+lr_lat_max:-9.34272151277601
+
+
+dataset_type: 20
+size: 695714
+total_time: 108.29900002479553
+query_time: 107.04900026321411
+sort_time: 1.249999761581421
+ul_lat_min:-45.3617666489582
+ul_lat_max:-9.06593707775848
+ur_lat_min:-45.270711692348
+ur_lat_max:-8.95509853519923
+ll_lat_min:-45.7527100081081
+ll_lat_max:-9.07822637133554
+lr_lat_min:-45.6509233366584
+lr_lat_max:-9.07796309367509
+
+
+dataset_type: 80
+size: 0
+total_time: 0.08600020408630371
+query_time: 0.018000125885009766
+sort_time: 0.06800007820129395
+ul_lat_min:0
+ul_lat_max:0
+ur_lat_min:0
+ur_lat_max:0
+ll_lat_min:0
+ll_lat_max:0
+lr_lat_min:0
+lr_lat_max:0
+
+
+dataset_type: 96
+size: 0
+total_time: 0.0070002079010009766
+query_time: 0.0070002079010009766
+sort_time: 0.0
+ul_lat_min:0
+ul_lat_max:0
+ur_lat_min:0
+ur_lat_max:0
+ll_lat_min:0
+ll_lat_max:0
+lr_lat_min:0
+lr_lat_max:0
+
+
+dataset_type: 87
+size: 1244
+total_time: 0.27900004386901855
+query_time: 0.27499985694885254
+sort_time: 0.004000186920166016
+ul_lat_min:-44.0054006200445
+ul_lat_max:-9.89375992789356
+ur_lat_min:-43.87816814195
+ur_lat_max:-9.84279218734942
+ll_lat_min:-44.9351287319957
+ll_lat_max:-10.0009461432349
+lr_lat_min:-44.8058881458062
+lr_lat_max:-10.0009715316323
+
+
+dataset_type: 86
+size: 1244
+total_time: 0.06399989128112793
+query_time: 0.05900001525878906
+sort_time: 0.004999876022338867
+ul_lat_min:-44.0006486121453
+ul_lat_max:-9.89401922766879
+ur_lat_min:-43.87816814195
+ur_lat_max:-9.84945823683644
+ll_lat_min:-44.1229634585582
+ll_lat_max:-10.0010560551108
+lr_lat_min:-44.0008647181684
+lr_lat_max:-10.0011062251186
+
+
+dataset_type: 78
+size: 37029
+total_time: 45.316200256347656
+query_time: 45.238200187683105
+sort_time: 0.07800006866455078
+ul_lat_min:-45.3617666489582
+ul_lat_max:-8.16548037528756
+ur_lat_min:-45.270711692348
+ur_lat_max:-8.08168272497727
+ll_lat_min:-45.7518045573208
+ll_lat_max:-8.38953412973827
+lr_lat_min:-45.640490545991
+lr_lat_max:-8.36168461784585
+
+
+dataset_type: 79
+size: 1450
+total_time: 4.44599986076355
+query_time: 4.4303998947143555
+sort_time: 0.015599966049194336
+ul_lat_min:-45.3617666489582
+ul_lat_max:-8.16548037528756
+ur_lat_min:-45.270711692348
+ur_lat_max:-8.08168272497727
+ll_lat_min:-45.7518045573208
+ll_lat_max:-8.38953412973827
+lr_lat_min:-45.640490545991
+lr_lat_max:-8.36168461784585
+
+
+dataset_type: 92
+size: 602074
+total_time: 854.7804000377655
+query_time: 853.6944000720978
+sort_time: 1.0859999656677246
+ul_lat_min:-82.8523811113827
+ul_lat_max:29.8304673200188
+ur_lat_min:-82.8518492390138
+ur_lat_max:29.830428692795
+ll_lat_min:-83.8359514208087
+ll_lat_max:28.83946566637
+lr_lat_min:-83.8353338950425
+lr_lat_max:28.8394285649842
+
+
+dataset_type: 93
+size: 304376
+total_time: 253.86700010299683
+query_time: 253.18499994277954
+sort_time: 0.6820001602172852
+ul_lat_min:-82.8523811113827
+ul_lat_max:29.8264095224603
+ur_lat_min:-82.8518492390138
+ur_lat_max:29.830428692795
+ll_lat_min:-83.8359514208087
+ll_lat_max:28.8355681524374
+lr_lat_min:-83.8353338950425
+lr_lat_max:28.8394285649842
+
+
+dataset_type: 56
+size: 1
+total_time: 0.04500007629394531
+query_time: 0.015000104904174805
+sort_time: 0.029999971389770508
+ul_lat_min:-10.0001388886963
+ul_lat_max:-10.0001388886963
+ur_lat_min:-10.0001388886963
+ur_lat_max:-10.0001388886963
+ll_lat_min:-44.0001388892447
+ll_lat_max:-44.0001388892447
+lr_lat_min:-44.0001388892447
+lr_lat_max:-44.0001388892447
+
+
+dataset_type: 89
+size: 1244
+total_time: 0.3210000991821289
+query_time: 0.31599998474121094
+sort_time: 0.005000114440917969
+ul_lat_min:-44.0054006200445
+ul_lat_max:-9.89375992789356
+ur_lat_min:-43.87816814195
+ur_lat_max:-9.84279218734942
+ll_lat_min:-44.9351287319957
+ll_lat_max:-10.0009461432349
+lr_lat_min:-44.8058881458062
+lr_lat_max:-10.0009715316323
+
+
+dataset_type: 77
+size: 2767431
+total_time: 686.5841999053955
+query_time: 681.4007999897003
+sort_time: 5.18339991569519
+ul_lat_min:-44.0006486022793
+ul_lat_max:-9.90070948343329
+ur_lat_min:-43.9384790769603
+ur_lat_max:-9.84945822683644
+ll_lat_min:-44.1194088072213
+ll_lat_max:-10.0010560449878
+lr_lat_min:-44.0008647084395
+lr_lat_max:-10.0011062150772
+
+
+dataset_type: 97
+size: 36436
+total_time: 38.08940005302429
+query_time: 37.42520022392273
+sort_time: 0.6641998291015625
+ul_lat_min:-44.0006486022793
+ul_lat_max:-9.90070948343329
+ur_lat_min:-43.9379397323295
+ur_lat_max:-9.84945822683644
+ll_lat_min:-44.1194088072213
+ll_lat_max:-10.0010560449878
+lr_lat_min:-44.0008647084395
+lr_lat_max:-10.0011062150772
+
+
+dataset_type: 85
+size: 1244
+total_time: 0.34820008277893066
+query_time: 0.3472001552581787
+sort_time: 0.0009999275207519531
+ul_lat_min:-44.0054006200445
+ul_lat_max:-9.00692244744483
+ur_lat_min:-43.87816814195
+ur_lat_max:-9.00692244744483
+ll_lat_min:-44.9351287319957
+ll_lat_max:-9.93509678400507
+lr_lat_min:-44.8058881458062
+lr_lat_max:-9.93509678400507
+
+
+dataset_type: 84
+size: 1244
+total_time: 5.27620005607605
+query_time: 5.27620005607605
+sort_time: 0.0
+ul_lat_min:-44.0006486022793
+ul_lat_max:-9.90070948343329
+ur_lat_min:-43.904347797349
+ur_lat_max:-9.84945822683644
+ll_lat_min:-44.1194088072213
+ll_lat_max:-10.0010560449878
+lr_lat_min:-44.0008647084395
+lr_lat_max:-10.0011062150772
+
+
+dataset_type: 3
+size: 128797
+total_time: 121.65720009803772
+query_time: 121.40560007095337
+sort_time: 0.2516000270843506
+ul_lat_min:-42.267316
+ul_lat_max:-8.134683
+ur_lat_min:-42.26471
+ur_lat_max:-8.12855
+ll_lat_min:-44.221435
+ll_lat_max:-10.21277
+lr_lat_min:-44.218646
+lr_lat_max:-10.205041
+
+
+dataset_type: 4
+size: 128734
+total_time: 64.63059997558594
+query_time: 64.36459970474243
+sort_time: 0.26600027084350586
+ul_lat_min:-42.267316
+ul_lat_max:-8.134683
+ur_lat_min:-42.26471
+ur_lat_max:-8.12855
+ll_lat_min:-44.221435
+ll_lat_max:-10.21277
+lr_lat_min:-44.218646
+lr_lat_max:-10.205041
+
+
+dataset_type: 75
+size: 127986
+total_time: 66.4359998703003
+query_time: 66.17199993133545
+sort_time: 0.26399993896484375
+ul_lat_min:-42.267316
+ul_lat_max:-8.134683
+ur_lat_min:-42.26471
+ur_lat_max:-8.12855
+ll_lat_min:-44.221435
+ll_lat_max:-10.21277
+lr_lat_min:-44.218646
+lr_lat_max:-10.205041
+
+
+dataset_type: 5
+size: 128766
+total_time: 69.9079999923706
+query_time: 69.66599988937378
+sort_time: 0.24200010299682617
+ul_lat_min:-42.267316
+ul_lat_max:-8.134683
+ur_lat_min:-42.26471
+ur_lat_max:-8.12855
+ll_lat_min:-44.221435
+ll_lat_max:-10.21277
+lr_lat_min:-44.218646
+lr_lat_max:-10.205041
+
+
+dataset_type: 10
+size: 151380
+total_time: 108.65999984741211
+query_time: 108.35899996757507
+sort_time: 0.30099987983703613
+ul_lat_min:-42.20773
+ul_lat_max:-9.155469
+ur_lat_min:-42.26042
+ur_lat_max:-9.146336
+ll_lat_min:-44.198032
+ll_lat_max:-10.643645
+lr_lat_min:-44.16682
+lr_lat_max:-10.627855
+
+
+dataset_type: 11
+size: 148589
+total_time: 76.17981219291687
+query_time: 75.8832278251648
+sort_time: 0.2965843677520752
+ul_lat_min:-42.20773
+ul_lat_max:-9.155469
+ur_lat_min:-42.26042
+ur_lat_max:-9.146336
+ll_lat_min:-44.198032
+ll_lat_max:-10.643645
+lr_lat_min:-44.16682
+lr_lat_max:-10.627855
+
+
+dataset_type: 76
+size: 139951
+total_time: 81.93037033081055
+query_time: 81.63378596305847
+sort_time: 0.2965843677520752
+ul_lat_min:-42.20773
+ul_lat_max:-9.155469
+ur_lat_min:-42.26042
+ur_lat_max:-9.146336
+ll_lat_min:-44.198032
+ll_lat_max:-10.643645
+lr_lat_min:-44.16682
+lr_lat_max:-10.627855
+
+
+dataset_type: 12
+size: 151232
+total_time: 56.825554609298706
+query_time: 56.51733899116516
+sort_time: 0.3082156181335449
+ul_lat_min:-42.20773
+ul_lat_max:-9.155469
+ur_lat_min:-42.26042
+ur_lat_max:-9.146336
+ll_lat_min:-44.198032
+ll_lat_max:-10.643645
+lr_lat_min:-44.16682
+lr_lat_max:-10.627855
+
+
+dataset_type: 15
+size: 77151
+total_time: 74.42706251144409
+query_time: 74.25194001197815
+sort_time: 0.17512249946594238
+ul_lat_min:-43.644678
+ul_lat_max:-9.06961
+ur_lat_min:-43.675568
+ur_lat_max:-9.059619
+ll_lat_min:-45.663078
+ll_lat_max:-10.638564
+lr_lat_min:-45.67944
+lr_lat_max:-10.627717
+
+
+dataset_type: 58
+size: 108
+total_time: 0.10007023811340332
+query_time: 0.08706092834472656
+sort_time: 0.013009309768676758
+ul_lat_min:-43.640567
+ul_lat_max:-9.072133
+ur_lat_min:-43.675254
+ur_lat_max:-9.068207
+ll_lat_min:-44.304424
+ll_lat_max:-11.121485
+lr_lat_min:-44.33992
+lr_lat_max:-11.115647
+
+
+dataset_type: 16
+size: 71365
+total_time: 30.08004117012024
+query_time: 29.938942432403564
+sort_time: 0.1410987377166748
+ul_lat_min:-43.644678
+ul_lat_max:-9.06961
+ur_lat_min:-43.675568
+ur_lat_max:-9.059619
+ll_lat_min:-45.663078
+ll_lat_max:-10.638564
+lr_lat_min:-45.67944
+lr_lat_max:-10.627717
+
+
+dataset_type: 74
+size: 0
+total_time: 0.015010356903076172
+query_time: 0.008005619049072266
+sort_time: 0.007004737854003906
+ul_lat_min:0
+ul_lat_max:0
+ur_lat_min:0
+ur_lat_max:0
+ll_lat_min:0
+ll_lat_max:0
+lr_lat_min:0
+lr_lat_max:0
+
+
+dataset_type: 73
+size: 66616
+total_time: 15.812060594558716
+query_time: 15.695979356765747
+sort_time: 0.11608123779296875
+ul_lat_min:-43.644678
+ul_lat_max:-9.06961
+ur_lat_min:-43.675568
+ur_lat_max:-9.059619
+ll_lat_min:-45.663078
+ll_lat_max:-10.638564
+lr_lat_min:-45.67944
+lr_lat_max:-10.627717
+
+
+dataset_type: 59
+size: 108
+total_time: 0.041028738021850586
+query_time: 0.03402376174926758
+sort_time: 0.007004976272583008
+ul_lat_min:-43.640567
+ul_lat_max:-9.072133
+ur_lat_min:-43.675254
+ur_lat_max:-9.068207
+ll_lat_min:-44.304424
+ll_lat_max:-11.121485
+lr_lat_min:-44.33992
+lr_lat_max:-11.115647
+
+
+dataset_type: 17
+size: 74668
+total_time: 33.48411273956299
+query_time: 33.34106993675232
+sort_time: 0.14304280281066895
+ul_lat_min:-43.644678
+ul_lat_max:-9.06961
+ur_lat_min:-43.675568
+ur_lat_max:-9.059619
+ll_lat_min:-45.663078
+ll_lat_max:-10.638564
+lr_lat_min:-45.67944
+lr_lat_max:-10.627717
+
+
+dataset_type: 2
+size: 227432
+total_time: 72.05820512771606
+query_time: 71.66831755638123
+sort_time: 0.38988757133483887
+ul_lat_min:-65.830424
+ul_lat_max:16.863751
+ur_lat_min:-65.749831
+ur_lat_max:16.850825
+ll_lat_min:-68.054232
+ll_lat_max:14.992606
+lr_lat_min:-67.964534
+lr_lat_max:14.981183
+
+
+dataset_type: 9
+size: 248974
+total_time: 130.98438668251038
+query_time: 130.47424006462097
+sort_time: 0.5101466178894043
+ul_lat_min:-80.880756
+ul_lat_max:77.000625
+ur_lat_min:-80.850367
+ur_lat_max:77.119747
+ll_lat_min:-82.824183
+ll_lat_max:74.611473
+lr_lat_min:-82.788833
+lr_lat_max:74.711282
+
+
+dataset_type: 40
+size: 328
+total_time: 0.5859589576721191
+query_time: 0.5569500923156738
+sort_time: 0.029008865356445312
+ul_lat_min:-43.640665
+ul_lat_max:12.702507
+ur_lat_min:-43.675254
+ur_lat_max:12.718784
+ll_lat_min:-44.329707
+ll_lat_max:12.047758
+lr_lat_min:-44.36498
+lr_lat_max:12.063171
+
+
+dataset_type: 14
+size: 105847
+total_time: 36.85109233856201
+query_time: 36.663851499557495
+sort_time: 0.1872408390045166
+ul_lat_min:-54.916863
+ul_lat_max:77.187003
+ur_lat_min:-54.950727
+ur_lat_max:77.289746
+ll_lat_min:-55.706619
+ll_lat_max:75.841269
+lr_lat_min:-55.714919
+lr_lat_max:75.904312
+
+
+dataset_type: 90
+size: 166980
+total_time: 250.06547689437866
+query_time: 249.71344184875488
+sort_time: 0.3520350456237793
+ul_lat_min:-44.2528773940617
+ul_lat_max:-9.0360453627093
+ur_lat_min:-44.2528119751822
+ur_lat_max:-9.02727104242042
+ll_lat_min:-45.2413329418709
+ll_lat_max:-10.028030036464
+lr_lat_min:-45.2412652418972
+lr_lat_max:-10.0182742677839
+
+
+dataset_type: 91
+size: 80053
+total_time: 118.4848473072052
+query_time: 118.3108298778534
+sort_time: 0.17401742935180664
+ul_lat_min:-44.2528773940617
+ul_lat_max:-9.0360453627093
+ur_lat_min:-44.2528119751822
+ur_lat_max:-9.02727104242042
+ll_lat_min:-45.2413329418709
+ll_lat_max:-10.028030036464
+lr_lat_min:-45.2412652418972
+lr_lat_max:-10.0182742677839
+
+
