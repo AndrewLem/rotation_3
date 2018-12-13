@@ -38,6 +38,8 @@ Result  (cost=55.94..55.95 rows=1 width=8)
 
 [2018-12-13 13:28:22] 1 row retrieved starting from 1 in 52 s 464 ms (execution: 52 s 448 ms, fetching: 16 ms)
 
+after dataset_type_ref, ul_lat index
+[2018-12-13 14:08:03] 1 row retrieved starting from 1 in 93 ms (execution: 62 ms, fetching: 31 ms)
  */
 
 
@@ -55,6 +57,8 @@ Aggregate  (cost=2313148.93..2313148.94 rows=1 width=8)
 
 [2018-12-13 13:30:42] 1 row retrieved starting from 1 in 1 m 45 s 523 ms (execution: 1 m 45 s 507 ms, fetching: 16 ms)
 
+[2018-12-13 14:10:27] 1 row retrieved starting from 1 in 1 m 44 s 354 ms (execution: 1 m 44 s 342 ms, fetching: 12 ms)
+
  */
 
 
@@ -64,4 +68,8 @@ create index dix_69_ul_lat
 
 create index dix_0dataset_type_ul_lat
   on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision))
+  where (archived IS NULL);
+
+create index dix_0dataset_type_ur_lat
+  on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision))
   where (archived IS NULL);
