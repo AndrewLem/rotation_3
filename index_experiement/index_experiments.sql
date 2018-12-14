@@ -120,3 +120,19 @@ create index dix_0dataset_type_ul_lat
 create index dix_0dataset_type_ur_lat
   on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision))
   where (archived IS NULL);
+
+/*
+file size before index:
+70.4 GB (75,693,523,158 bytes)
+70.5 GB (75,719,622,656 bytes)
+ */
+
+create index dix_0dataset_type_ll_lat
+  on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision))
+  where (archived IS NULL);
+
+/*
+file size after index:
+71.0 GB (76,259,614,981 bytes)
+71.0 GB (76,285,714,432 bytes)
+ */
