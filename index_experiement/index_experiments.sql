@@ -136,3 +136,151 @@ file size after index:
 71.0 GB (76,259,614,981 bytes)
 71.0 GB (76,285,714,432 bytes)
  */
+
+create index dix_0dataset_type_lr_lat
+  on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision))
+  where (archived IS NULL);
+
+
+----------------------------------------------------------------
+-- todo:need to be run
+
+
+create index dix_0dataset_type_ll_lon
+  on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision))
+  where (archived IS NULL);
+
+create index dix_0dataset_type_lr_lon
+  on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision))
+  where (archived IS NULL);
+
+create index dix_0dataset_type_ul_lon
+  on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision))
+  where (archived IS NULL);
+
+create index dix_0dataset_type_ur_lon
+  on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision))
+  where (archived IS NULL);
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+explain SELECT agdc.dataset.id,
+       agdc.dataset.metadata_type_ref,
+       agdc.dataset.dataset_type_ref,
+       agdc.dataset.metadata,
+       agdc.dataset.archived,
+       agdc.dataset.added,
+       agdc.dataset.added_by,
+       array(
+           (SELECT selected_dataset_location.uri_scheme || ':' || selected_dataset_location.uri_body AS anon_1
+            FROM agdc.dataset_location AS selected_dataset_location
+            WHERE selected_dataset_location.dataset_ref = agdc.dataset.id
+              AND selected_dataset_location.archived IS NULL
+            ORDER BY selected_dataset_location.added DESC, selected_dataset_location.id DESC)) AS uris
+FROM agdc.dataset
+WHERE agdc.dataset.archived IS NULL
+  AND (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
+                        greatest(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
+                        '[]')
+         && agdc.float8range (152.3, 152.34, '[)' ))
+  AND (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)
+                              ),
+                        greatest(CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)
+                                ),
+                        '[]')
+         && agdc.float8range (-24.89, -24.85, '[)' ))
+  AND (tstzrange(agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, from_dt}')),
+                 agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, to_dt}')),
+                '[]') &&
+       tstzrange ('2017-06-01 00:00:00+00', '2017-09-01 00:00:00+00', '[)' )
+)
+AND agdc.dataset.dataset_type_ref = 21;
+
+
+/*
+agdc.dataset.dataset_type_ref = 19
+[2018-12-17 11:41:57] 5 rows retrieved starting from 1 in 11 m 42 s 21 ms (execution: 11 m 41 s 895 ms, fetching: 126 ms)
+
+added index: ix_agdc_dataset_location_dataset_ref
+
+[2018-12-17 12:18:33] 7 rows retrieved starting from 1 in 132 ms (execution: 101 ms, fetching: 31 ms)
+[2018-12-17 13:06:53] 5 rows retrieved starting from 1 in 531 ms (execution: 484 ms, fetching: 47 ms)
+
+agdc.dataset.dataset_type_ref = 20
+[2018-12-17 13:26:03] 5 rows retrieved starting from 1 in 406 ms (execution: 359 ms, fetching: 47 ms)
+
+agdc.dataset.dataset_type_ref = 21
+[2018-12-17 13:26:46] 5 rows retrieved starting from 1 in 639 ms (execution: 592 ms, fetching: 47 ms)
+
+
+deleting dix_ls7_nbar_albers_time_lat_lon
+deleting dix_ls7_nbar_albers_lat_lon_time
+[2018-12-17 13:32:54] 5 rows retrieved starting from 1 in 3 m 15 s 642 ms (execution: 3 m 15 s 627 ms, fetching: 15 ms)
+[2018-12-17 13:39:55] 5 rows retrieved starting from 1 in 3 m 12 s 697 ms (execution: 3 m 12 s 666 ms, fetching: 31 ms)
+ */
+
+ -- auto-generated definition
+create index dix_ls7_nbar_albers_time_lat_lon
+  on agdc.dataset (tstzrange(agdc.common_timestamp(metadata #>> '{extent,from_dt}'::text[]),
+                        agdc.common_timestamp(metadata #>> '{extent,to_dt}'::text[]), '[]'::text), agdc.float8range(
+                  LEAST((metadata #>> '{extent,coord,ur,lat}'::text[])::double precision,
+                        (metadata #>> '{extent,coord,lr,lat}'::text[])::double precision,
+                        (metadata #>> '{extent,coord,ul,lat}'::text[])::double precision,
+                        (metadata #>> '{extent,coord,ll,lat}'::text[])::double precision),
+                  GREATEST((metadata #>> '{extent,coord,ur,lat}'::text[])::double precision,
+                           (metadata #>> '{extent,coord,lr,lat}'::text[])::double precision,
+                           (metadata #>> '{extent,coord,ul,lat}'::text[])::double precision,
+                           (metadata #>> '{extent,coord,ll,lat}'::text[])::double precision), '[]'::text),
+              agdc.float8range(LEAST((metadata #>> '{extent,coord,ul,lon}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,ur,lon}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,ll,lon}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,lr,lon}'::text[])::double precision),
+                               GREATEST((metadata #>> '{extent,coord,ul,lon}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,ur,lon}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,ll,lon}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,lr,lon}'::text[])::double precision), '[]'::text))
+  where ((archived IS NULL) AND (dataset_type_ref = 21));
+
+-- auto-generated definition
+create index dix_ls7_nbar_albers_lat_lon_time
+  on agdc.dataset (agdc.float8range(LEAST((metadata #>> '{extent,coord,ur,lat}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,lr,lat}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,ul,lat}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,ll,lat}'::text[])::double precision),
+                               GREATEST((metadata #>> '{extent,coord,ur,lat}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,lr,lat}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,ul,lat}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,ll,lat}'::text[])::double precision), '[]'::text),
+              agdc.float8range(LEAST((metadata #>> '{extent,coord,ul,lon}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,ur,lon}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,ll,lon}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,lr,lon}'::text[])::double precision),
+                               GREATEST((metadata #>> '{extent,coord,ul,lon}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,ur,lon}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,ll,lon}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,lr,lon}'::text[])::double precision), '[]'::text),
+              tstzrange(agdc.common_timestamp(metadata #>> '{extent,from_dt}'::text[]),
+                        agdc.common_timestamp(metadata #>> '{extent,to_dt}'::text[]), '[]'::text))
+  where ((archived IS NULL) AND (dataset_type_ref = 21));
+
+
+
+-- creating new index
+create index dix_0_ls7_nbar_albers_ur_lat
+  on agdc.dataset (((metadata #>> '{extent,coord,ur,lat}'::text[])::double precision))
+  where ((archived IS NULL) AND (dataset_type_ref = 21));
