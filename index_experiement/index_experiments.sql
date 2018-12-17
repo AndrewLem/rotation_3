@@ -142,9 +142,6 @@ create index dix_0dataset_type_lr_lat
   where (archived IS NULL);
 
 
-----------------------------------------------------------------
--- todo:need to be run
-
 
 create index dix_0dataset_type_ll_lon
   on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision))
