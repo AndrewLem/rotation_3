@@ -124,7 +124,7 @@ create index dix_0dataset_type_ur_lat
 /*
 file size before index:
 70.4 GB (75,693,523,158 bytes)
-70.5 GB (75,719,622,656 bytes)
+70.5 GB (75,719,622,656 bytes) on disk
  */
 
 create index dix_0dataset_type_ll_lat
@@ -134,7 +134,7 @@ create index dix_0dataset_type_ll_lat
 /*
 file size after index:
 71.0 GB (76,259,614,981 bytes)
-71.0 GB (76,285,714,432 bytes)
+71.0 GB (76,285,714,432 bytes) on disk
  */
 
 create index dix_0dataset_type_lr_lat
@@ -397,3 +397,22 @@ WHERE agdc.dataset.archived IS NULL
        tstzrange ('2017-06-01 00:00:00+00', '2017-09-01 00:00:00+00', '[)' )
 )
 AND agdc.dataset.dataset_type_ref = 21;
+
+
+/*
+creating 8 partial indexes on data_type_ref 21
+size before:
+74.2 GB (79,684,031,277 bytes)
+74.2 GB (79,710,130,176 bytes) on disk
+size after:
+74.4 GB (79,915,791,363 bytes)
+74.4 GB (79,941,890,048 bytes) on disk
+*/
+create index dix_ul_lat_21 on agdc.dataset (((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 21;
+create index dix_ur_lat_21 on agdc.dataset (((metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 21;
+create index dix_ll_lat_21 on agdc.dataset (((metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 21;
+create index dix_lr_lat_21 on agdc.dataset (((metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 21;
+create index dix_ul_lon_21 on agdc.dataset (((metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 21;
+create index dix_ur_lon_21 on agdc.dataset (((metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 21;
+create index dix_ll_lon_21 on agdc.dataset (((metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 21;
+create index dix_lr_lon_21 on agdc.dataset (((metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 21;
