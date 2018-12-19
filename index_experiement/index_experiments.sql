@@ -416,3 +416,12 @@ create index dix_ul_lon_21 on agdc.dataset (((metadata #>> '{{extent,coord,ul,lo
 create index dix_ur_lon_21 on agdc.dataset (((metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 21;
 create index dix_ll_lon_21 on agdc.dataset (((metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 21;
 create index dix_lr_lon_21 on agdc.dataset (((metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 21;
+
+drop index agdc.dix_ul_lat_21;
+drop index agdc.dix_ur_lat_21;
+drop index agdc.dix_ll_lat_21;
+drop index agdc.dix_lr_lat_21;
+drop index agdc.dix_ul_lon_21;
+drop index agdc.dix_ur_lon_21;
+drop index agdc.dix_ll_lon_21;
+drop index agdc.dix_lr_lon_21;
