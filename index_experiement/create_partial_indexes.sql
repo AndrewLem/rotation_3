@@ -1,3 +1,9 @@
+/*
+size before:
+74.4 GB (79,915,791,363 bytes)
+74.4 GB (79,941,890,048 bytes) on disk
+ */
+
 create index dix_26_ul_lat on agdc.dataset (((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 26;
 create index dix_26_ur_lat on agdc.dataset (((metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 26;
 create index dix_26_ll_lat on agdc.dataset (((metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 26;
