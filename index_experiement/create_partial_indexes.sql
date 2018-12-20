@@ -245,6 +245,14 @@ create index dix_85_ur_lon on agdc.dataset (((metadata #>> '{{extent,coord,ur,lo
 create index dix_85_ll_lon on agdc.dataset (((metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 85;
 create index dix_85_lr_lon on agdc.dataset (((metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 85;
 create index dix_79_ul_lat on agdc.dataset (((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 79;
+
+/*
+stopped here
+size:
+76.5 GB (82,149,676,873 bytes)
+76.5 GB (82,187,223,040 bytes) on disk
+ */
+
 create index dix_79_ur_lat on agdc.dataset (((metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 79;
 create index dix_79_ll_lat on agdc.dataset (((metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 79;
 create index dix_79_lr_lat on agdc.dataset (((metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision)) where (archived IS NULL) and dataset_type_ref = 79;
