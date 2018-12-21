@@ -29,10 +29,10 @@ def main():
 
             for entry_coordinate in entry_coordinates:
                 dataset_type_ref, ul_lat, ur_lat, ll_lat, lr_lat, ul_lon, ur_lon, ll_lon, lr_lon = entry_coordinate
-                
-                compared = [ul_lat < ur_lat, ur_lat < lr_lat, lr_lat < ll_lat, ll_lat < ul_lat,
-                            ul_lon < ur_lon, ur_lon < lr_lon, lr_lon < ll_lon, ll_lon < ul_lon]
-                
+
+                compared = [int(ul_lat < ur_lat), int(ur_lat < lr_lat), int(lr_lat < ll_lat), int(ll_lat < ul_lat),
+                            int(ul_lon < ur_lon), int(ur_lon < lr_lon), int(lr_lon < ll_lon), int(ll_lon < ul_lon)]
+
                 with open(output_filename, "a") as f:
                     f.write(','.join(str(x) for x in compared) + "\n")
 
