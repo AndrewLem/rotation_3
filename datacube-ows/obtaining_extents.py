@@ -17,9 +17,9 @@ def main():
             """)
             id_result = cur.fetchall()
 
-            for id in id_result:
+            for dataset_id in id_result:
                 with open(output_filename, "a") as f:
-                    f.write(f"dataset_type: {id[0]}\n")
+                    f.write(f"dataset_type: {dataset_id[0]}\n")
 
                 start = time.time()
 
@@ -29,7 +29,7 @@ def main():
                        (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision as ll_lats,
                        (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision as lr_lats
                 from agdc.dataset
-                where archived IS NULL and dataset_type_ref = {id[0]};
+                where archived IS NULL and dataset_type_ref = {dataset_id[0]};
                 """)
                 query_done = time.time()
 

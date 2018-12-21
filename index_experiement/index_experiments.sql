@@ -521,6 +521,7 @@ WHERE agdc.dataset.archived IS NULL
 
 select dataset_type_ref, count(*) as count
 from agdc.dataset
+where archived is null
 group by dataset_type_ref
 order by count desc;
 
@@ -555,20 +556,6 @@ and
   (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision < (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision
 ;
 
-select dataset_type_ref ,count(*)
-  from agdc.dataset
-  where (archived is null)
-and
-  (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision > (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision
-   or
-  (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision > (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision
-   or
-  (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision < (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision
-   or
-  (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision < (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision
-group by dataset_type_ref
-;
-
 
 select *
 from agdc.dataset
@@ -596,11 +583,72 @@ where (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision > 33.87
 and (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision > 33.87
 and (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision < 33.87
 and (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision < 33.87
-and (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision > 151.21
-         (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision) > 151.21
-and least((metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision) < 151.21;
+and (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision < 151.21
+and (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision > 151.21
+and (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision < 151.21
+and (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision > 151.21;
+
+
+
+
+select dataset_type_ref ,count(*)
+  from agdc.dataset
+  where (archived is null)
+and
+  (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision < (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision
+   or
+  (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision < (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision
+   or
+  (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision > (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision
+   or
+  (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision > (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision
+group by dataset_type_ref
+;
+
+select *
+  from agdc.dataset
+  where (archived is null)
+and
+  (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision < (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision
+;
+
+
+select dataset_type_ref ,count(*)
+  from agdc.dataset
+  where (archived is null)
+and
+  (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision < (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision
+group by dataset_type_ref
+;
+
+
+select dataset_type_ref ,count(*)
+  from agdc.dataset
+  where (archived is null)
+and
+  (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision < (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision
+group by dataset_type_ref
+;
+
+
+select dataset_type_ref ,count(*)
+  from agdc.dataset
+  where (archived is null)
+and
+  (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision < (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision
+group by dataset_type_ref
+;
+
+
+select dataset_type_ref,
+         (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision as ul_lat,
+         (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision as ur_lat,
+         (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision as ll_lat,
+         (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision as lr_lat,
+         (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision as ul_lon,
+         (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision as ur_lon,
+         (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision as ll_lon,
+         (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision as lr_lon
+  from agdc.dataset
+  where (archived is null)
+;
