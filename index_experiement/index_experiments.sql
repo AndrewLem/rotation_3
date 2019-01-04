@@ -536,119 +536,287 @@ where dataset_type_ref = 77
 
 
 select dataset_type_ref,
-         (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision as ul_lat,
-         (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision as ur_lat,
-         (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision as ll_lat,
-         (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision as lr_lat,
-         (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision as ul_lon,
-         (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision as ur_lon,
-         (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision as ll_lon,
-         (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision as lr_lon
-  from agdc.dataset
-  where (archived is null)
-and
-  (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision > (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision
+       (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision as ul_lat,
+       (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision as ur_lat,
+       (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision as ll_lat,
+       (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision as lr_lat,
+       (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision as ul_lon,
+       (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision as ur_lon,
+       (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision as ll_lon,
+       (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision as lr_lon
+from agdc.dataset
+where (archived is null)
+  and
+      (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision >
+      (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision
    or
-  (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision > (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision
+    (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision >
+    (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision
    or
-  (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision < (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision
+    (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision <
+    (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision
    or
-  (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision < (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision
+    (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision <
+    (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision
 ;
 
 
 select *
 from agdc.dataset
 where greatest((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision) > 33.87
-and least((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision) < 33.87
-and greatest((metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision) > 151.21
-and least((metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision,
-         (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision) < 151.21;
+               (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision,
+               (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision,
+               (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision) > 33.87
+  and least((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision,
+            (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision,
+            (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision,
+            (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision) < 33.87
+  and greatest((metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision,
+               (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision,
+               (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision,
+               (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision) > 151.21
+  and least((metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision,
+            (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision,
+            (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision,
+            (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision) < 151.21;
 
 
 select *
 from agdc.dataset
 where (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision > 33.87
-and (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision > 33.87
-and (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision < 33.87
-and (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision < 33.87
-and (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision < 151.21
-and (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision > 151.21
-and (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision < 151.21
-and (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision > 151.21;
+  and (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision > 33.87
+  and (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision < 33.87
+  and (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision < 33.87
+  and (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision < 151.21
+  and (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision > 151.21
+  and (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision < 151.21
+  and (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision > 151.21;
 
 
 
-
-select dataset_type_ref ,count(*)
-  from agdc.dataset
-  where (archived is null)
-and
-  (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision < (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision
+select dataset_type_ref,count(*)
+from agdc.dataset
+where (archived is null)
+  and
+      (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision <
+      (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision
    or
-  (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision < (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision
+    (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision <
+    (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision
    or
-  (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision > (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision
+    (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision >
+    (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision
    or
-  (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision > (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision
+    (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision >
+    (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision
 group by dataset_type_ref
 ;
 
 select *
-  from agdc.dataset
-  where (archived is null)
-and
-  (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision < (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision
+from agdc.dataset
+where (archived is null)
+  and
+    (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision <
+    (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision
 ;
 
 
-select dataset_type_ref ,count(*)
-  from agdc.dataset
-  where (archived is null)
-and
-  (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision < (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision
+select dataset_type_ref,count(*)
+from agdc.dataset
+where (archived is null)
+  and
+    (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision <
+    (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision
 group by dataset_type_ref
 ;
 
 
-select dataset_type_ref ,count(*)
-  from agdc.dataset
-  where (archived is null)
-and
-  (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision < (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision
+select dataset_type_ref,count(*)
+from agdc.dataset
+where (archived is null)
+  and
+    (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision <
+    (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision
 group by dataset_type_ref
 ;
 
 
-select dataset_type_ref ,count(*)
-  from agdc.dataset
-  where (archived is null)
-and
-  (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision < (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision
+select dataset_type_ref,count(*)
+from agdc.dataset
+where (archived is null)
+  and
+    (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision <
+    (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision
 group by dataset_type_ref
 ;
 
 
 select dataset_type_ref,
-         (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision as ul_lat,
-         (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision as ur_lat,
-         (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision as ll_lat,
-         (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision as lr_lat,
-         (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision as ul_lon,
-         (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision as ur_lon,
-         (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision as ll_lon,
-         (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision as lr_lon
-  from agdc.dataset
-  where (archived is null)
+       (metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision as ul_lat,
+       (metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision as ur_lat,
+       (metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision as ll_lat,
+       (metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision as lr_lat,
+       (metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision as ul_lon,
+       (metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision as ur_lon,
+       (metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision as ll_lon,
+       (metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision as lr_lon
+from agdc.dataset
+where (archived is null)
 ;
+
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+-- slow queries
+SELECT agdc.dataset.id,
+       agdc.dataset.metadata_type_ref,
+       agdc.dataset.dataset_type_ref,
+       agdc.dataset.metadata,
+       agdc.dataset.archived,
+       agdc.dataset.added,
+       agdc.dataset.added_by,
+       array((SELECT selected_dataset_location.uri_scheme || ':' || selected_dataset_location.uri_body AS anon_1
+              FROM agdc.dataset_location AS selected_dataset_location
+              WHERE selected_dataset_location.dataset_ref = agdc.dataset.id
+                AND selected_dataset_location.archived IS NULL
+              ORDER BY selected_dataset_location.added DESC, selected_dataset_location.id DESC)) AS uris
+FROM agdc.dataset
+WHERE agdc.dataset.archived IS NULL
+  AND (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)),
+                        greatest(CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)),
+                        '[]') && '[ -36.18348132582486, -35.22313291663772)')
+  AND (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
+                        greatest(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
+                        '[]') && '[137.19710243283376,138.4442681122013)')
+  AND agdc.dataset.dataset_type_ref = 92;
+
+
+SELECT agdc.dataset.id,
+       agdc.dataset.metadata_type_ref,
+       agdc.dataset.dataset_type_ref,
+       agdc.dataset.metadata,
+       agdc.dataset.archived,
+       agdc.dataset.added,
+       agdc.dataset.added_by,
+       array((SELECT selected_dataset_location.uri_scheme || ':' || selected_dataset_location.uri_body AS anon_1
+              FROM agdc.dataset_location AS selected_dataset_location
+              WHERE selected_dataset_location.dataset_ref = agdc.dataset.id
+                AND selected_dataset_location.archived IS NULL
+              ORDER BY selected_dataset_location.added DESC, selected_dataset_location.id DESC)) AS uris
+FROM agdc.dataset
+WHERE agdc.dataset.archived IS NULL
+  AND (tstzrange(agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, from_dt}')),
+                 agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, to_dt}')), '[]') &&
+       tstzrange('2018-01-01T00:00:00+00:00'::timestamptz, '2018-12-01T23:59:59.999999+00:00'::timestamptz, '[)'))
+  AND (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)),
+                        greatest(CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)),
+                        '[]') @> CAST(-35.77 AS DOUBLE PRECISION))
+  AND (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
+                        greatest(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
+                        '[]') && '[44.27,144.27)')
+  AND agdc.dataset.dataset_type_ref = 92;
+
+
+SELECT agdc.dataset.id,
+       agdc.dataset.metadata_type_ref,
+       agdc.dataset.dataset_type_ref,
+       agdc.dataset.metadata,
+       agdc.dataset.archived,
+       agdc.dataset.added,
+       agdc.dataset.added_by,
+       array((SELECT selected_dataset_location.uri_scheme || ':' || selected_dataset_location.uri_body AS anon_1
+              FROM agdc.dataset_location AS selected_dataset_location
+              WHERE selected_dataset_location.dataset_ref = agdc.dataset.id
+                AND selected_dataset_location.archived IS NULL
+              ORDER BY selected_dataset_location.added DESC, selected_dataset_location.id DESC)) AS uris
+FROM agdc.dataset
+WHERE agdc.dataset.archived IS NULL
+  AND (tstzrange(least(agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, from_dt}')),
+                       agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, center_dt}'))),
+                 greatest(agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, to_dt}')),
+                          agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, center_dt}'))), '[]') &&
+       tstzrange('2013-01-01T00:00:00+00:00'::timestamptz, '2018-12-31T23:59:59.999999+00:00'::timestamptz, '[)'))
+  AND (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)),
+                        greatest(CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)),
+                        '[]') && '[ -31.341862288997746, -31.340612711002255)')
+  AND (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
+                        greatest(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
+                        '[]') && '[121.64698252709579,121.64870963957088)')
+  AND agdc.dataset.dataset_type_ref = 16;
+
+
+SELECT agdc.dataset.id,
+       agdc.dataset.metadata_type_ref,
+       agdc.dataset.dataset_type_ref,
+       agdc.dataset.metadata,
+       agdc.dataset.archived,
+       agdc.dataset.added,
+       agdc.dataset.added_by,
+       array((SELECT selected_dataset_location.uri_scheme || ':' || selected_dataset_location.uri_body AS anon_1
+              FROM agdc.dataset_location AS selected_dataset_location
+              WHERE selected_dataset_location.dataset_ref = agdc.dataset.id
+                AND selected_dataset_location.archived IS NULL
+              ORDER BY selected_dataset_location.added DESC, selected_dataset_location.id DESC)) AS uris
+FROM agdc.dataset
+WHERE agdc.dataset.archived IS NULL
+  AND (tstzrange(least(agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, from_dt}')),
+                       agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, center_dt}'))),
+                 greatest(agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, to_dt}')),
+                          agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, center_dt}'))), '[]') &&
+       tstzrange('2013-01-01T00:00:00+00:00'::timestamptz, '2018-12-31T23:59:59.999999+00:00'::timestamptz, '[)'))
+  AND (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)),
+                        greatest(CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)),
+                        '[]') && '[ -30.58522062233108, -30.58383437766892)')
+  AND (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
+                        greatest(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
+                        '[]') && '[115.154974564771,115.15649043522902)')
+  AND agdc.dataset.dataset_type_ref = 16
+
