@@ -486,7 +486,10 @@ select greatest(val, val2, val3)
 from agdc.testing_table;
 
 
-select *
+-----------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------
+explain select *
 FROM agdc.dataset
 WHERE agdc.dataset.archived IS NULL
   AND (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
@@ -518,6 +521,9 @@ WHERE agdc.dataset.archived IS NULL
   )
   AND agdc.dataset.dataset_type_ref = 21;
 
+-----------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------
 
 select dataset_type_ref, count(*) as count
 from agdc.dataset
@@ -668,7 +674,7 @@ where (archived is null)
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
 -- slow queries
-SELECT agdc.dataset.id,
+explain SELECT agdc.dataset.id,
        agdc.dataset.metadata_type_ref,
        agdc.dataset.dataset_type_ref,
        agdc.dataset.metadata,
@@ -820,3 +826,103 @@ WHERE agdc.dataset.archived IS NULL
                         '[]') && '[115.154974564771,115.15649043522902)')
   AND agdc.dataset.dataset_type_ref = 16
 
+
+
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+-- trying to get local to use the correct index for simple query
+
+----------------------
+
+
+--- temporarily disable using an index in query:
+select * from pg_index;
+
+update pg_index set indisvalid = false where indexrelid = 3356677; -- where indisvalid = false; --
+
+select indexrelid from pg_statio_all_indexes where indexrelname = 'dix_0dataset_type_ul_lat';
+
+
+-----
+
+
+explain select *
+FROM agdc.dataset
+WHERE (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)
+                          ),
+                        greatest(CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)
+                          ),
+                        '[]')
+  && agdc.float8range(-24.89, -24.85, '[)'))
+  AND (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
+                              CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
+                        greatest(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
+                                 CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
+                        '[]')
+  && agdc.float8range(152.3, 152.34, '[)'))
+  AND (tstzrange(agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, from_dt}')),
+                 agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, to_dt}')),
+                 '[]') &&
+       tstzrange('2017-06-01 00:00:00+00', '2017-09-01 00:00:00+00', '[)')
+  )
+  AND agdc.dataset.archived IS NULL
+  AND agdc.dataset.dataset_type_ref = 21;
+
+
+
+---
+
+analyze;
+
+show search_path ;
+
+vacuum;
+
+show default_statistics_target ;  -- default value is 100
+
+analyse agdc.dataset;
+
+set default_statistics_target = 1000; -- default 100
+
+set enable_seqscan = off; -- default on
+set enable_bitmapscan = off; -- default on
+
+show enable_seqscan;
+
+select * from pg_stats;
+
+reindex index agdc.dix_ls7_nbar_albers_lat_lon_time;
+
+show enable_indexscan;
+
+SET seq_page_cost = 2;
+
+
+-- auto-generated definition
+create index tix_active_dataset_type
+  on agdc.dataset (dataset_type_ref)
+  where (archived IS NULL);
+
+
+
+select * from pg_index where indisvalid = false;
+
+show seq_page_cost ;
+
+show random_page_cost ;
+
+set random_page_cost = 2;
+
+
+-- using dix_0greatest_lon time: > 30 min
