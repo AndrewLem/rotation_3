@@ -824,7 +824,7 @@ WHERE agdc.dataset.archived IS NULL
                                  CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
                                  CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
                         '[]') && '[115.154974564771,115.15649043522902)')
-  AND agdc.dataset.dataset_type_ref = 16
+  AND agdc.dataset.dataset_type_ref = 16;
 
 
 
