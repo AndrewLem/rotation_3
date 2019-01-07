@@ -926,3 +926,9 @@ set random_page_cost = 2;
 
 
 -- using dix_0greatest_lon time: > 30 min
+
+-- finally using expected index: > 25 min
+
+-- todo: vacuum analyze
+
+vacuum analyze;
