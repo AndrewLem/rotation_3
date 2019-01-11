@@ -837,7 +837,9 @@ WHERE agdc.dataset.archived IS NULL
 
 
 --- temporarily disable using an index in query:
-select * from pg_index;
+select * from pg_index where indisvalid = false;
+
+update pg_index set indisvalid = true where indisvalid = false; --
 
 update pg_index set indisvalid = false where indexrelid = 3356677; -- where indisvalid = false; --
 
@@ -877,7 +879,8 @@ WHERE (agdc.float8range(least(CAST((agdc.dataset.metadata #>> '{extent, coord, u
        tstzrange('2017-06-01 00:00:00+00', '2017-09-01 00:00:00+00', '[)')
   )
   AND agdc.dataset.archived IS NULL
-  AND agdc.dataset.dataset_type_ref = 21;
+  AND agdc.dataset.dataset_type_ref = 21
+limit 5;
 
 
 
@@ -932,3 +935,18 @@ set random_page_cost = 2;
 -- todo: vacuum analyze
 
 vacuum analyze;
+
+show work_mem;
+
+set work_mem = '64MB';
+
+show temp_file_limit;
+
+set temp_file_limit = '8GB';
+
+show shared_buffers;
+
+
+-- todo:
+
+VACUUM FULL ANALYZE;
