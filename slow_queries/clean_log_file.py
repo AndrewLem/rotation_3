@@ -33,23 +33,6 @@ def include_line_check(line):
                                                  re.search('count\(.*\)', line) or
                                                  re.search('vacuum', line) or
                                                  re.search('create', line))
-    # return not (re.search('^.*connection.*', line, re.I) or
-    #             re.search('^.*out of shared memory.*', line, re.I) or
-    #             re.search('^.*statement: +COPY.*', line, re.I) or
-    #             re.search('^.*statement: create.*', line, re.I) or
-    #             re.search('^.*statement: vacuum.*', line, re.I) or
-    #             re.search('^.*statement: analyse.*', line, re.I) or
-    #             re.search('^\s*CONTEXT:.*', line, re.I) or
-    #             re.search('^\s*DETAIL:.*', line, re.I) or
-    #             re.search('^\s*FATAL:.*', line, re.I) or
-    #             re.search('^\s*ERROR:.*', line, re.I) or
-    #             re.search('^\s*HINT:.*', line, re.I) or
-    #             re.search('^\s*LOG:  checkpoint.*', line, re.I) or
-    #             re.search('^\s*LOG:  automatic.*', line, re.I) or
-    #             re.search('^.*count\(.*\).*', line, re.I) or
-    #             re.search('^.*temporary file: path.*', line, re.I) or
-    #             re.search('^.*could not send data.*', line, re.I) or
-    #             re.search('^\s*;\s*', line, re.I))
 
 
 if __name__ == '__main__':
