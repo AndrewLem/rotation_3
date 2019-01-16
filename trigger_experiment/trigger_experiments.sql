@@ -51,6 +51,8 @@ CREATE TRIGGER product_count
   FOR EACH ROW
 EXECUTE PROCEDURE adjust_count();
 
+
+-- TODO: run this create table statement
 CREATE TABLE agdc.extra_dataset_info
 as
 select id,
