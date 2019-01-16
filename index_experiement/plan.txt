@@ -17,3 +17,12 @@ highlight parts of lines beginning with 2018 and up to a colon ':' without inclu
 
 find all lines with the words "duration" and "select" but not count
 duration\: \d{5,}.*select((?!count).)*$
+
+
+Run pgadmin4 locally
+python C:\Users\U33522\AppData\Local\Continuum\anaconda3\envs\DEA\Lib\site-packages\pgadmin4\pgAdmin4.py
+
+
+Creating new products are slow - remove creation of partial indexes - just maintain one large index
+Saves the database from having to create a bunch of new indexes every time a product is created, it just needs to update
+the index
