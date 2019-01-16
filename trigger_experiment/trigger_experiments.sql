@@ -116,8 +116,8 @@ BEGIN
                      (NEW.metadata #>> '{extent,coord,ur,lon}'::text[])::double precision,
                      (NEW.metadata #>> '{extent,coord,ll,lon}'::text[])::double precision,
                      (NEW.metadata #>> '{extent,coord,lr,lon}'::text[])::double precision) || ',' ||
-            '''' || agdc.common_timestamp(metadata #>> '{extent,from_dt}'::text[]) || ''',' ||
-            '''' || agdc.common_timestamp(metadata #>> '{extent,to_dt}'::text[]) || ''')';
+            '''' || agdc.common_timestamp(NEW.metadata #>> '{extent,from_dt}'::text[]) || ''',' ||
+            '''' || agdc.common_timestamp(NEW.metadata #>> '{extent,to_dt}'::text[]) || ''')';
     RETURN NEW;
   ELSIF TG_OP = 'DELETE' THEN
     EXECUTE 'DELETE FROM agdc.extra_dataset_info WHERE id = ''' || OLD.id || '''';
@@ -133,3 +133,24 @@ CREATE TRIGGER product_extra_info
   FOR EACH ROW
 EXECUTE PROCEDURE extra_dataset_info_update();
 
+select id,
+       dataset_type_ref,
+       LEAST((metadata #>> '{extent,coord,ur,lat}'::text[])::double precision,
+             (metadata #>> '{extent,coord,lr,lat}'::text[])::double precision,
+             (metadata #>> '{extent,coord,ul,lat}'::text[])::double precision,
+             (metadata #>> '{extent,coord,ll,lat}'::text[])::double precision)    as lat_least,
+       GREATEST((metadata #>> '{extent,coord,ur,lat}'::text[])::double precision,
+                (metadata #>> '{extent,coord,lr,lat}'::text[])::double precision,
+                (metadata #>> '{extent,coord,ul,lat}'::text[])::double precision,
+                (metadata #>> '{extent,coord,ll,lat}'::text[])::double precision) as lat_greatest,
+       LEAST((metadata #>> '{extent,coord,ul,lon}'::text[])::double precision,
+             (metadata #>> '{extent,coord,ur,lon}'::text[])::double precision,
+             (metadata #>> '{extent,coord,ll,lon}'::text[])::double precision,
+             (metadata #>> '{extent,coord,lr,lon}'::text[])::double precision)    as lon_least,
+       GREATEST((metadata #>> '{extent,coord,ul,lon}'::text[])::double precision,
+                (metadata #>> '{extent,coord,ur,lon}'::text[])::double precision,
+                (metadata #>> '{extent,coord,ll,lon}'::text[])::double precision,
+                (metadata #>> '{extent,coord,lr,lon}'::text[])::double precision) as lon_greatest,
+       agdc.common_timestamp(metadata #>> '{extent,from_dt}'::text[])             as from_dt,
+       agdc.common_timestamp(metadata #>> '{extent,to_dt}'::text[])               as to_dt
+from agdc.dataset;
