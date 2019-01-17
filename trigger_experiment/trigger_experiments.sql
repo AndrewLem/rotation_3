@@ -57,6 +57,7 @@ CREATE TABLE agdc.extra_dataset_info
 as
 select id,
        dataset_type_ref,
+       archived,
        LEAST((metadata #>> '{extent,coord,ur,lat}'::text[])::double precision,
              (metadata #>> '{extent,coord,lr,lat}'::text[])::double precision,
              (metadata #>> '{extent,coord,ul,lat}'::text[])::double precision,
@@ -76,6 +77,45 @@ select id,
        agdc.common_timestamp(metadata #>> '{extent,from_dt}'::text[])             as from_dt,
        agdc.common_timestamp(metadata #>> '{extent,to_dt}'::text[])               as to_dt
 from agdc.dataset;
+
+
+create index dix_extra_dataset_info
+  on agdc.extra_dataset_info (archived,
+                              dataset_type_ref,
+                              agdc.float8range(lat_least, lat_greatest, '[]'::text),
+                              agdc.float8range(lon_least, lon_greatest, '[]'::text),
+                              tstzrange(from_dt, to_dt, '[]'::text));
+
+
+create index extra_dataset_info_dataset_type_ref_index
+  on agdc.extra_dataset_info (dataset_type_ref);
+
+create index extra_dataset_info_from_dt_index
+  on agdc.extra_dataset_info (from_dt);
+
+create unique index extra_dataset_info_id_uindex
+  on agdc.extra_dataset_info (id);
+
+create index extra_dataset_info_lat_greatest_index
+  on agdc.extra_dataset_info (lat_greatest);
+
+create index extra_dataset_info_lat_least_index
+  on agdc.extra_dataset_info (lat_least);
+
+create index extra_dataset_info_lon_greatest_index
+  on agdc.extra_dataset_info (lon_greatest);
+
+create index extra_dataset_info_lon_least_index
+  on agdc.extra_dataset_info (lon_least);
+
+create index extra_dataset_info_to_dt_index
+  on agdc.extra_dataset_info (to_dt);
+
+alter table agdc.extra_dataset_info
+  add constraint extra_dataset_info_pk
+    primary key (id);
+
+
 
 CREATE TABLE agdc.extra_dataset_info
 (
