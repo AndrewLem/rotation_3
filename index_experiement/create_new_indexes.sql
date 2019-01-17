@@ -58,8 +58,6 @@ create index dix_0dataset_least_lat
                                            (metadata #>> '{extent,coord,ll,lat}'::text[])::double precision))
   where (archived IS NULL);
 
--- TODO: run below commands
-
 create index dix_0dataset_greatest_lat
   on agdc.dataset (dataset_type_ref, GREATEST((metadata #>> '{extent,coord,ur,lat}'::text[])::double precision,
                                               (metadata #>> '{extent,coord,lr,lat}'::text[])::double precision,
@@ -83,3 +81,56 @@ create index dix_0dataset_greatest_lon
 
 
 
+
+
+create index dix_0least_lat
+  on agdc.dataset (dataset_type_ref, LEAST((metadata #>> '{extent,coord,ur,lat}'::text[])::double precision,
+                                           (metadata #>> '{extent,coord,lr,lat}'::text[])::double precision,
+                                           (metadata #>> '{extent,coord,ul,lat}'::text[])::double precision,
+                                           (metadata #>> '{extent,coord,ll,lat}'::text[])::double precision))
+  where (archived IS NULL);
+
+create index dix_0greatest_lat
+  on agdc.dataset (dataset_type_ref, GREATEST((metadata #>> '{extent,coord,ur,lat}'::text[])::double precision,
+                                              (metadata #>> '{extent,coord,lr,lat}'::text[])::double precision,
+                                              (metadata #>> '{extent,coord,ul,lat}'::text[])::double precision,
+                                              (metadata #>> '{extent,coord,ll,lat}'::text[])::double precision))
+  where (archived IS NULL);
+
+create index dix_0least_lon
+  on agdc.dataset (dataset_type_ref, LEAST((metadata #>> '{extent,coord,ur,lon}'::text[])::double precision,
+                                           (metadata #>> '{extent,coord,lr,lon}'::text[])::double precision,
+                                           (metadata #>> '{extent,coord,ul,lon}'::text[])::double precision,
+                                           (metadata #>> '{extent,coord,ll,lon}'::text[])::double precision))
+  where (archived IS NULL);
+
+create index dix_0greatest_lon
+  on agdc.dataset (dataset_type_ref, GREATEST((metadata #>> '{extent,coord,ur,lon}'::text[])::double precision,
+                                              (metadata #>> '{extent,coord,lr,lon}'::text[])::double precision,
+                                              (metadata #>> '{extent,coord,ul,lon}'::text[])::double precision,
+                                              (metadata #>> '{extent,coord,ll,lon}'::text[])::double precision))
+  where (archived IS NULL);
+
+
+
+create index dix_s2a_level1c_granule_lat_range
+  on agdc.dataset (agdc.float8range(LEAST((metadata #>> '{extent,coord,ur,lat}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,lr,lat}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,ul,lat}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,ll,lat}'::text[])::double precision),
+                               GREATEST((metadata #>> '{extent,coord,ur,lat}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,lr,lat}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,ul,lat}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,ll,lat}'::text[])::double precision), '[]'::text))
+  where ((archived IS NULL) AND (dataset_type_ref = 92));
+
+create index dix_s2a_level1c_granule_lon_range
+  on agdc.dataset (agdc.float8range(LEAST((metadata #>> '{extent,coord,ur,lon}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,lr,lon}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,ul,lon}'::text[])::double precision,
+                                     (metadata #>> '{extent,coord,ll,lon}'::text[])::double precision),
+                               GREATEST((metadata #>> '{extent,coord,ur,lon}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,lr,lon}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,ul,lon}'::text[])::double precision,
+                                        (metadata #>> '{extent,coord,ll,lon}'::text[])::double precision), '[]'::text))
+  where ((archived IS NULL) AND (dataset_type_ref = 92));
