@@ -1,0 +1,37 @@
+--------------------------------------------------------------------------------------------------------------
+Find missing Indexes
+--------------------------------------------------------------------------------------------------------------
+Based on what indexes currently exist, it was possible to identify missing indexes based on their metadata_type_ref and a count of indexes for each product
+
+--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+Fix Missing Indexes
+--------------------------------------------------------------------------------------------------------------
+After identifying which indexes are missing, the product per metadata_type_ref with the most indexes are used as index templates to fill the missing indexes.
+
+--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+•	Min/max (Extent) indexes
+    o	[X] Test performance improvements
+    o	[X] Test insertion performance
+    o	[X] Measure size impact
+    o	Test with index on time
+    o	Write up findings with proposal for what to implement
+•	Research performance (and limitations) of the current dataset spatial and temporal search query
+    o	Write up the current limitations
+    o	Propose a better querying methodology
+•	Following on from min/max
+    o	Produce queries that use the min/max indexes to replace functionality in dea-dashboard
+    o	Produce queries that use the min/max indexes to replace functionality in datacube-ows Probably really really simple Talk to Robbie (Armstrong) and/or Ashoka
+•	Talk to Jeremy about potential problems with proposed improvements He did the initial implementation of the ODC database code, and has gone on to create cubedash/dea-dashboard, so is very familiar with the problem space.
+•	Review Slow queries from database logs
+    o	Are there any common things we should improve.
+•	Take another snapshot of index usage and compare
