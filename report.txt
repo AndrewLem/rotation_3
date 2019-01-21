@@ -1,7 +1,13 @@
+
+It is important to note that query speed and time testing was conducted on a local copy of the database. This had a significantly different performance compared to the original database in the NCI environment. As such the recommendations are also based on theory.
+
+--------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------
 Find missing Indexes
 --------------------------------------------------------------------------------------------------------------
-Based on what indexes currently exist, it was possible to identify missing indexes based on their metadata_type_ref and a count of indexes for each product
+Based on what indexes currently exist, it was possible to identify missing indexes based on their metadata_type_ref and a count of indexes for each product.
+
+<include table identifying missing indexes>
 
 --------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------
@@ -9,29 +15,52 @@ Fix Missing Indexes
 --------------------------------------------------------------------------------------------------------------
 After identifying which indexes are missing, the product per metadata_type_ref with the most indexes are used as index templates to fill the missing indexes.
 
---------------------------------------------------------------------------------------------------------------
---------------------------------------------------------------------------------------------------------------
+<refer to previous table to identify which indexes were used as templates>
 
 --------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+Min/max (Extent) indexes
+--------------------------------------------------------------------------------------------------------------
+8 new indexes on individual corner coordinates (upper left, upper right, lower left and lower right - latitudes and longitudes) significantly improves max/min query speeds on those columns.
+
+<include query speed tests>
+
+The new indexes had minimal impacts on insertion times.
+
+<include insertion speed tests>
+
+Required <insert memory size> more hard drive space to maintain.
 
 
+Depending on the requirements of dea-dashboard and datacube-ows - these are the recommended indexes to implement:
+???
 
+•	Following on from min/max
+    o	Produce queries that use the min/max indexes to replace functionality in dea-dashboard
+    o	Produce queries that use the min/max indexes to replace functionality in datacube-ows Probably
 
+--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+Research performance (and limitations) of the current dataset spatial and temporal search query
+--------------------------------------------------------------------------------------------------------------
+Main current limitation is the retrieval of data from the JSON followed by the least or greatest function to identify the border conditions for each row. If new columns were added to dataset that contained the precomputed values that most queries refer to it should be possible to improve query speeds.
 
+<include table indicating query time differences>
 
-•	Min/max (Extent) indexes
-    o	[X] Test performance improvements
-    o	[X] Test insertion performance
-    o	[X] Measure size impact
-    o	Test with index on time
-    o	Write up findings with proposal for what to implement
 •	Research performance (and limitations) of the current dataset spatial and temporal search query
     o	Write up the current limitations
     o	Propose a better querying methodology
-•	Following on from min/max
-    o	Produce queries that use the min/max indexes to replace functionality in dea-dashboard
-    o	Produce queries that use the min/max indexes to replace functionality in datacube-ows Probably really really simple Talk to Robbie (Armstrong) and/or Ashoka
+really really simple Talk to Robbie (Armstrong) and/or Ashoka
+
 •	Talk to Jeremy about potential problems with proposed improvements He did the initial implementation of the ODC database code, and has gone on to create cubedash/dea-dashboard, so is very familiar with the problem space.
+
+
 •	Review Slow queries from database logs
     o	Are there any common things we should improve.
 •	Take another snapshot of index usage and compare
+
+
+*** concerns ***
+the new structure was faster for the slow queries - not sure about the impact on the already fast queries
+- need to test queries that aren't slow
+
