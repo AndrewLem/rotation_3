@@ -71,7 +71,6 @@ $$
   LANGUAGE 'plpgsql';
 
 
--- todo: run this trigger creation
 CREATE TRIGGER dataset_info_trigger
   BEFORE INSERT
   ON agdc.dataset
