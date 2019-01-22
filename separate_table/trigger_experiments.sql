@@ -745,6 +745,13 @@ Execution time: 958.458 ms
 ----------------
 with gist index:
 ----------------
+Index Scan using eo_1_time_lat_lon on eo_1_data  (cost=0.42..68.82 rows=1 width=16) (actual time=207.984..295584.248 rows=1520 loops=1)
+  Index Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range))
+  Filter: (dataset_type_ref = 29)
+  Rows Removed by Filter: 26521
+Planning time: 124.705 ms
+Execution time: 295584.801 ms
+
 
  */
 

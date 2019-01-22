@@ -86,11 +86,11 @@ EXECUTE PROCEDURE dataset_info_update();
 
 
 create unique index eo_1_data_id_uindex
-	on agdc.eo_1_data (id);
+  on agdc.eo_1_data (id);
 
 alter table agdc.eo_1_data
-	add constraint eo_1_data_pk
-		primary key (id);
+  add constraint eo_1_data_pk
+    primary key (id);
 
 /*
 May potentially need to create a btree_gist extension if the following error occurs:
@@ -124,25 +124,31 @@ CREATE INDEX eo_1_dataset_type_ref
     (dataset_type_ref)
   WHERE ((archived IS NULL));
 
-CREATE INDEX eo_1_dataset_type_ref_all
+CREATE INDEX eo_1_pure_dataset_type_ref
   ON agdc.eo_1_data
     (dataset_type_ref);
 
 
+
+-- todo: run all below
+
+CREATE INDEX eo_1_pure_lat_lon
+  ON agdc.eo_1_data
+    USING gist (agdc.float8range(lat_least, lat_greatest, '[]'::text),
+                agdc.float8range(lon_least, lon_greatest, '[]'::text));
+
+CREATE INDEX eo_1_pure_time
+  ON agdc.eo_1_data
+    USING gist (tstzrange(from_dt, to_dt, '[]'::text));
+
+
+CREATE INDEX eo_1_pure_lat_lon_2
+  ON agdc.eo_1_data
+    (agdc.float8range(lat_least, lat_greatest, '[]'::text),
+     agdc.float8range(lon_least, lon_greatest, '[]'::text));
+
+CREATE INDEX eo_1_pure_time_2
+  ON agdc.eo_1_data
+    (tstzrange(from_dt, to_dt, '[]'::text));
+
 analyse agdc.eo_1_data;
-
-
---
--- CREATE INDEX eo_1_lat_lon_time_no_dataset
---   ON agdc.eo_1_data
---     USING gist (agdc.float8range(lat_least, lat_greatest, '[]'::text),
---                 agdc.float8range(lon_least, lon_greatest, '[]'::text),
---                 tstzrange(from_dt, to_dt, '[]'::text))
---   WHERE ((archived IS NULL));
---
--- CREATE INDEX eo_1_time_lat_lon_no_dataset
---   ON agdc.eo_1_data
---     USING gist (tstzrange(from_dt, to_dt, '[]'::text),
---                 agdc.float8range(lat_least, lat_greatest, '[]'::text),
---                 agdc.float8range(lon_least, lon_greatest, '[]'::text))
---   WHERE ((archived IS NULL));
