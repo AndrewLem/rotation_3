@@ -224,6 +224,9 @@ from agdc.dataset;
 
 
 
+--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+
 EXPLAIN ANALYSE SELECT agdc.dataset.id,
                        agdc.dataset.metadata_type_ref,
                        agdc.dataset.dataset_type_ref,
@@ -295,7 +298,7 @@ Execution time: 194542.958 ms
 
 
 EXPLAIN ANALYSE SELECT id
-                FROM agdc.extra_dataset_info
+                FROM agdc.eo_1_data
                 WHERE archived IS NULL
                   AND dataset_type_ref = 21
                   AND (agdc.float8range(lat_least, lat_greatest, '[]') && agdc.float8range(-24.89, -24.85, '[)'))
@@ -314,6 +317,37 @@ Bitmap Heap Scan on extra_dataset_info  (cost=26737.08..317122.76 rows=1 width=1
         Index Cond: (dataset_type_ref = 21)
 Planning time: 0.263 ms
 Execution time: 23334.458 ms
+
+----------------
+with gist index:
+----------------
+Index Scan using eo_1_time_lat_lon on eo_1_data  (cost=0.42..68.82 rows=1 width=16) (actual time=427.945..1706.958 rows=5 loops=1)
+  Index Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2017-06-01 00:00:00+00","2017-09-01 00:00:00+00")'::tstzrange) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-24.890000000000001,-24.850000000000001)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[152.30000000000001,152.34)'::agdc.float8range))
+  Filter: (dataset_type_ref = 21)
+  Rows Removed by Filter: 59
+Planning time: 10424.085 ms
+Execution time: 1712.598 ms
+
+Index Scan using eo_1_time_lat_lon on eo_1_data  (cost=0.42..68.82 rows=1 width=16) (actual time=13.672..48.723 rows=5 loops=1)
+  Index Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2017-06-01 00:00:00+00","2017-09-01 00:00:00+00")'::tstzrange) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-24.890000000000001,-24.850000000000001)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[152.30000000000001,152.34)'::agdc.float8range))
+  Filter: (dataset_type_ref = 21)
+  Rows Removed by Filter: 59
+Planning time: 0.236 ms
+Execution time: 48.762 ms
+
+Index Scan using eo_1_time_lat_lon on eo_1_data  (cost=0.42..68.82 rows=1 width=16) (actual time=398.320..783.550 rows=5 loops=1)
+  Index Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2017-06-01 00:00:00+00","2017-09-01 00:00:00+00")'::tstzrange) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-24.890000000000001,-24.850000000000001)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[152.30000000000001,152.34)'::agdc.float8range))
+  Filter: (dataset_type_ref = 21)
+  Rows Removed by Filter: 59
+Planning time: 0.222 ms
+Execution time: 783.593 ms
+
+Index Scan using eo_1_time_lat_lon on eo_1_data  (cost=0.42..68.82 rows=1 width=16) (actual time=17.069..51.492 rows=5 loops=1)
+  Index Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2017-06-01 00:00:00+00","2017-09-01 00:00:00+00")'::tstzrange) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-24.890000000000001,-24.850000000000001)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[152.30000000000001,152.34)'::agdc.float8range))
+  Filter: (dataset_type_ref = 21)
+  Rows Removed by Filter: 59
+Planning time: 0.256 ms
+Execution time: 51.527 ms
 
  */
 
@@ -357,7 +391,7 @@ Execution time: 315467.500 ms
  */
 
 EXPLAIN ANALYSE SELECT id
-                FROM agdc.extra_dataset_info
+                FROM agdc.eo_1_data
                 WHERE archived IS NULL
                   AND dataset_type_ref = 92
                   AND (agdc.float8range(lat_least, lat_greatest, '[]') && '[ -36.18348132582486, -35.22313291663772)')
@@ -374,6 +408,29 @@ Bitmap Heap Scan on extra_dataset_info  (cost=10762.39..274450.22 rows=56 width=
         Index Cond: (dataset_type_ref = 92)
 Planning time: 0.236 ms
 Execution time: 5126.022 ms
+
+----------------
+with gist index:
+----------------
+Bitmap Heap Scan on eo_1_data  (cost=128.36..6143.47 rows=59 width=16) (actual time=2794.197..2817.340 rows=1575 loops=1)
+  Recheck Cond: ((agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-36.183481325824857,-35.223132916637717)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[137.19710243283376,138.44426811220131)'::agdc.float8range) AND (archived IS NULL))
+  Filter: (dataset_type_ref = 92)
+  Rows Removed by Filter: 79477
+  Heap Blocks: exact=30016
+  ->  Bitmap Index Scan on eo_1_time_lat_lon  (cost=0.00..128.35 rows=1593 width=0) (actual time=2778.482..2778.482 rows=81052 loops=1)
+        Index Cond: ((agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-36.183481325824857,-35.223132916637717)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[137.19710243283376,138.44426811220131)'::agdc.float8range))
+Planning time: 0.158 ms
+Execution time: 2817.856 ms
+
+Bitmap Heap Scan on eo_1_data  (cost=128.36..6143.47 rows=59 width=16) (actual time=2796.303..2819.355 rows=1575 loops=1)
+  Recheck Cond: ((agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-36.183481325824857,-35.223132916637717)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[137.19710243283376,138.44426811220131)'::agdc.float8range) AND (archived IS NULL))
+  Filter: (dataset_type_ref = 92)
+  Rows Removed by Filter: 79477
+  Heap Blocks: exact=30016
+  ->  Bitmap Index Scan on eo_1_time_lat_lon  (cost=0.00..128.35 rows=1593 width=0) (actual time=2780.455..2780.455 rows=81052 loops=1)
+        Index Cond: ((agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-36.183481325824857,-35.223132916637717)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[137.19710243283376,138.44426811220131)'::agdc.float8range))
+Planning time: 0.157 ms
+Execution time: 2819.939 ms
 
  */
 
@@ -421,7 +478,7 @@ Execution time: 1816.463 ms
  */
 
 EXPLAIN ANALYSE SELECT id
-                FROM agdc.extra_dataset_info
+                FROM agdc.eo_1_data
                 WHERE archived IS NULL
                   AND (tstzrange(from_dt, to_dt, '[]')
                   && tstzrange('2013-01-01T00:00:00+00:00'::timestamptz,
@@ -438,6 +495,30 @@ Index Scan using dix_extra_dataset_info_dataset_type_ref on extra_dataset_info  
   Rows Removed by Filter: 70991
 Planning time: 0.199 ms
 Execution time: 4856.852 ms
+
+----------------
+with gist index:
+----------------
+Index Scan using eo_1_time_lat_lon on eo_1_data  (cost=0.42..68.82 rows=1 width=16) (actual time=38663.924..38663.924 rows=0 loops=1)
+  Index Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2013-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-31.341862288997746,-31.340612711002255)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[121.64698252709579,121.64870963957088)'::agdc.float8range))
+  Filter: (dataset_type_ref = 16)
+  Rows Removed by Filter: 2515
+Planning time: 0.166 ms
+Execution time: 38663.981 ms
+
+Index Scan using eo_1_time_lat_lon on eo_1_data  (cost=0.42..68.82 rows=1 width=16) (actual time=1474.849..1474.849 rows=0 loops=1)
+  Index Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2013-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-31.341862288997746,-31.340612711002255)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[121.64698252709579,121.64870963957088)'::agdc.float8range))
+  Filter: (dataset_type_ref = 16)
+  Rows Removed by Filter: 2515
+Planning time: 0.202 ms
+Execution time: 1474.899 ms
+
+Index Scan using eo_1_time_lat_lon on eo_1_data  (cost=0.42..68.82 rows=1 width=16) (actual time=1453.621..1453.621 rows=0 loops=1)
+  Index Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2013-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-31.341862288997746,-31.340612711002255)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[121.64698252709579,121.64870963957088)'::agdc.float8range))
+  Filter: (dataset_type_ref = 16)
+  Rows Removed by Filter: 2515
+Planning time: 0.174 ms
+Execution time: 1480.290 ms
 
  */
 
@@ -458,7 +539,7 @@ Execution time: 283468.574 ms
  */
 
 EXPLAIN ANALYSE SELECT id
-                FROM agdc.extra_dataset_info
+                FROM agdc.eo_1_data
                 WHERE archived IS NULL
                   AND (tstzrange(from_dt, to_dt, '[]') &&
                        tstzrange('2017-01-01T00:00:00+00:00'::timestamptz,
@@ -475,6 +556,53 @@ Bitmap Heap Scan on extra_dataset_info  (cost=11956.43..273861.46 rows=6182 widt
         Index Cond: (dataset_type_ref = 19)
 Planning time: 0.245 ms
 Execution time: 16605.596 ms
+
+----------------
+with gist index:
+----------------
+Bitmap Heap Scan on eo_1_data  (cost=25793.24..50427.58 rows=7095 width=16) (actual time=23042.319..28174.769 rows=112381 loops=1)
+  Recheck Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2017-01-01 00:00:00+00","2018-01-01 23:59:59.999999+00")'::tstzrange) AND (archived IS NULL) AND (dataset_type_ref = 19))
+  Heap Blocks: exact=11593
+  ->  BitmapAnd  (cost=25793.24..25793.24 rows=7095 width=0) (actual time=23040.532..23040.532 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_time_lat_lon  (cost=0.00..12179.27 rows=159314 width=0) (actual time=22924.222..22924.223 rows=1152077 loops=1)
+              Index Cond: (tstzrange(from_dt, to_dt, '[]'::text) && '["2017-01-01 00:00:00+00","2018-01-01 23:59:59.999999+00")'::tstzrange)
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_all  (cost=0.00..13610.17 rows=736765 width=0) (actual time=104.644..104.644 rows=696974 loops=1)
+              Index Cond: (dataset_type_ref = 19)
+Planning time: 0.281 ms
+Execution time: 28181.943 ms
+
+Bitmap Heap Scan on eo_1_data  (cost=25793.24..50427.58 rows=7095 width=16) (actual time=6090.656..6359.286 rows=112381 loops=1)
+  Recheck Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2017-01-01 00:00:00+00","2018-01-01 23:59:59.999999+00")'::tstzrange) AND (archived IS NULL) AND (dataset_type_ref = 19))
+  Heap Blocks: exact=11593
+  ->  BitmapAnd  (cost=25793.24..25793.24 rows=7095 width=0) (actual time=6088.877..6088.877 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_time_lat_lon  (cost=0.00..12179.27 rows=159314 width=0) (actual time=6009.285..6009.285 rows=1152077 loops=1)
+              Index Cond: (tstzrange(from_dt, to_dt, '[]'::text) && '["2017-01-01 00:00:00+00","2018-01-01 23:59:59.999999+00")'::tstzrange)
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_all  (cost=0.00..13610.17 rows=736765 width=0) (actual time=67.763..67.763 rows=696974 loops=1)
+              Index Cond: (dataset_type_ref = 19)
+Planning time: 0.267 ms
+Execution time: 6362.658 ms
+
+Bitmap Heap Scan on eo_1_data  (cost=25793.24..50427.58 rows=7095 width=16) (actual time=376.618..400.313 rows=112381 loops=1)
+  Recheck Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2017-01-01 00:00:00+00","2018-01-01 23:59:59.999999+00")'::tstzrange) AND (archived IS NULL) AND (dataset_type_ref = 19))
+  Heap Blocks: exact=11593
+  ->  BitmapAnd  (cost=25793.24..25793.24 rows=7095 width=0) (actual time=374.725..374.725 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_time_lat_lon  (cost=0.00..12179.27 rows=159314 width=0) (actual time=318.169..318.169 rows=1152077 loops=1)
+              Index Cond: (tstzrange(from_dt, to_dt, '[]'::text) && '["2017-01-01 00:00:00+00","2018-01-01 23:59:59.999999+00")'::tstzrange)
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_all  (cost=0.00..13610.17 rows=736765 width=0) (actual time=42.331..42.331 rows=696974 loops=1)
+              Index Cond: (dataset_type_ref = 19)
+Planning time: 0.166 ms
+Execution time: 402.813 ms
+
+Bitmap Heap Scan on eo_1_data  (cost=25793.24..50427.58 rows=7095 width=16) (actual time=344.340..367.939 rows=112381 loops=1)
+  Recheck Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2017-01-01 00:00:00+00","2018-01-01 23:59:59.999999+00")'::tstzrange) AND (archived IS NULL) AND (dataset_type_ref = 19))
+  Heap Blocks: exact=11593
+  ->  BitmapAnd  (cost=25793.24..25793.24 rows=7095 width=0) (actual time=342.469..342.469 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_time_lat_lon  (cost=0.00..12179.27 rows=159314 width=0) (actual time=288.590..288.590 rows=1152077 loops=1)
+              Index Cond: (tstzrange(from_dt, to_dt, '[]'::text) && '["2017-01-01 00:00:00+00","2018-01-01 23:59:59.999999+00")'::tstzrange)
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_all  (cost=0.00..13610.17 rows=736765 width=0) (actual time=39.944..39.944 rows=696974 loops=1)
+              Index Cond: (dataset_type_ref = 19)
+Planning time: 0.165 ms
+Execution time: 370.456 ms
 
  */
 
@@ -501,7 +629,7 @@ Execution time: 259444.848 ms
  */
 
 EXPLAIN ANALYSE SELECT id
-                FROM agdc.extra_dataset_info
+                FROM agdc.eo_1_data
                 WHERE archived IS NULL
                   AND (tstzrange(from_dt, to_dt, '[]') &&
                        tstzrange('2018-01-01T00:00:00+00:00'::timestamptz,
@@ -518,6 +646,42 @@ Bitmap Heap Scan on extra_dataset_info  (cost=49966.89..347883.55 rows=25837 wid
         Index Cond: (dataset_type_ref = 77)
 Planning time: 0.230 ms
 Execution time: 1264.222 ms
+
+----------------
+with gist index:
+----------------
+Bitmap Heap Scan on eo_1_data  (cost=63048.42..140524.75 rows=26515 width=16) (actual time=36946.103..40582.296 rows=129669 loops=1)
+  Recheck Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2018-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange) AND (archived IS NULL) AND (dataset_type_ref = 77))
+  Heap Blocks: exact=9302
+  ->  BitmapAnd  (cost=63048.42..63048.42 rows=26515 width=0) (actual time=36944.796..36944.796 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_time_lat_lon  (cost=0.00..12179.27 rows=159314 width=0) (actual time=36715.050..36715.050 rows=1172237 loops=1)
+              Index Cond: (tstzrange(from_dt, to_dt, '[]'::text) && '["2018-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange)
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_all  (cost=0.00..50855.64 rows=2753494 width=0) (actual time=222.194..222.194 rows=2767431 loops=1)
+              Index Cond: (dataset_type_ref = 77)
+Planning time: 0.185 ms
+Execution time: 40589.104 ms
+
+Bitmap Heap Scan on eo_1_data  (cost=63048.42..140524.75 rows=26515 width=16) (actual time=600.708..628.033 rows=129669 loops=1)
+  Recheck Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2018-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange) AND (archived IS NULL) AND (dataset_type_ref = 77))
+  Heap Blocks: exact=9302
+  ->  BitmapAnd  (cost=63048.42..63048.42 rows=26515 width=0) (actual time=599.256..599.256 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_time_lat_lon  (cost=0.00..12179.27 rows=159314 width=0) (actual time=422.807..422.807 rows=1172237 loops=1)
+              Index Cond: (tstzrange(from_dt, to_dt, '[]'::text) && '["2018-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange)
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_all  (cost=0.00..50855.64 rows=2753494 width=0) (actual time=167.572..167.572 rows=2767431 loops=1)
+              Index Cond: (dataset_type_ref = 77)
+Planning time: 0.609 ms
+Execution time: 630.743 ms
+
+Bitmap Heap Scan on eo_1_data  (cost=63048.42..140524.75 rows=26515 width=16) (actual time=440.634..462.819 rows=129669 loops=1)
+  Recheck Cond: ((tstzrange(from_dt, to_dt, '[]'::text) && '["2018-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange) AND (archived IS NULL) AND (dataset_type_ref = 77))
+  Heap Blocks: exact=9302
+  ->  BitmapAnd  (cost=63048.42..63048.42 rows=26515 width=0) (actual time=439.220..439.220 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_time_lat_lon  (cost=0.00..12179.27 rows=159314 width=0) (actual time=267.686..267.686 rows=1172237 loops=1)
+              Index Cond: (tstzrange(from_dt, to_dt, '[]'::text) && '["2018-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange)
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_all  (cost=0.00..50855.64 rows=2753494 width=0) (actual time=157.475..157.475 rows=2767431 loops=1)
+              Index Cond: (dataset_type_ref = 77)
+Planning time: 0.271 ms
+Execution time: 465.426 ms
 
  */
 
@@ -559,7 +723,7 @@ Execution time: 14615.800 ms
 
 
 EXPLAIN ANALYSE SELECT id
-                FROM agdc.extra_dataset_info
+                FROM agdc.eo_1_data
                 WHERE archived IS NULL
                   AND (tstzrange(from_dt, to_dt, '[]')
                   && tstzrange('1986-01-01T00:00:00+00:00'::timestamptz,
@@ -577,6 +741,10 @@ Bitmap Heap Scan on extra_dataset_info  (cost=25634.21..314381.35 rows=1 width=1
         Index Cond: (dataset_type_ref = 29)
 Planning time: 0.182 ms
 Execution time: 958.458 ms
+
+----------------
+with gist index:
+----------------
 
  */
 

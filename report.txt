@@ -47,12 +47,16 @@ Main current limitation is the retrieval of data from the JSON followed by the l
 
 <include table indicating query time differences>
 
+Need to identify the reasoning for so many partial indexes. Possible that query performance would not change if including dataset_type_ref as the first column of the index but would improve insertion or creation of new product.
+
 •	Research performance (and limitations) of the current dataset spatial and temporal search query
     o	Write up the current limitations
     o	Propose a better querying methodology
 really really simple Talk to Robbie (Armstrong) and/or Ashoka
 
 •	Talk to Jeremy about potential problems with proposed improvements He did the initial implementation of the ODC database code, and has gone on to create cubedash/dea-dashboard, so is very familiar with the problem space.
+
+The state of the database was only meant to be temporary but followup measures were never taken. Many of the current issues were foreseen and considered non-critical. Cubedash and dea-dashboard were pilot projects as well that's why they were not incorporated into ODC.
 
 
 •	Review Slow queries from database logs
