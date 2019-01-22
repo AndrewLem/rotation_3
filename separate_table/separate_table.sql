@@ -130,7 +130,6 @@ CREATE INDEX eo_1_pure_dataset_type_ref
 
 
 
--- todo: run all below
 
 CREATE INDEX eo_1_pure_lat_lon
   ON agdc.eo_1_data
@@ -141,6 +140,7 @@ CREATE INDEX eo_1_pure_time
   ON agdc.eo_1_data
     USING gist (tstzrange(from_dt, to_dt, '[]'::text));
 
+-- todo: run all below
 
 CREATE INDEX eo_1_pure_lat_lon_2
   ON agdc.eo_1_data
