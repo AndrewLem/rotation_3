@@ -752,6 +752,41 @@ Index Scan using eo_1_time_lat_lon on eo_1_data  (cost=0.42..68.82 rows=1 width=
 Planning time: 124.705 ms
 Execution time: 295584.801 ms
 
+Bitmap Heap Scan on eo_1_data  (cost=25069.28..28770.05 rows=954 width=16) (actual time=162734.529..185033.199 rows=1520 loops=1)
+  Recheck Cond: ((agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range) AND (dataset_type_ref = 29) AND (archived IS NULL))
+  Filter: (tstzrange(from_dt, to_dt, '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange)
+  Heap Blocks: exact=1443
+  ->  BitmapAnd  (cost=25069.28..25069.28 rows=964 width=0) (actual time=162726.914..162726.914 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_pure_lat_lon  (cost=0.00..841.82 rows=12140 width=0) (actual time=156176.210..156176.210 rows=60316 loops=1)
+              Index Cond: ((agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range))
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref  (cost=0.00..24226.74 rows=1313374 width=0) (actual time=6544.607..6544.607 rows=1288777 loops=1)
+              Index Cond: (dataset_type_ref = 29)
+Planning time: 89.167 ms
+Execution time: 185034.896 ms
+
+Bitmap Heap Scan on eo_1_data  (cost=25711.69..29359.94 rows=941 width=16) (actual time=538.251..540.351 rows=1520 loops=1)
+  Recheck Cond: ((agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range) AND (dataset_type_ref = 29) AND (archived IS NULL))
+  Filter: (tstzrange(from_dt, to_dt, '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange)
+  Heap Blocks: exact=1443
+  ->  BitmapAnd  (cost=25711.69..25711.69 rows=950 width=0) (actual time=528.440..528.440 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_pure_lat_lon  (cost=0.00..809.07 rows=11665 width=0) (actual time=457.031..457.031 rows=60316 loops=1)
+              Index Cond: ((agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range))
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref  (cost=0.00..24901.90 rows=1347929 width=0) (actual time=68.745..68.745 rows=1288777 loops=1)
+              Index Cond: (dataset_type_ref = 29)
+Planning time: 11.669 ms
+Execution time: 540.764 ms
+
+Bitmap Heap Scan on eo_1_data  (cost=25711.69..29359.94 rows=941 width=16) (actual time=539.277..541.473 rows=1520 loops=1)
+  Recheck Cond: ((agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range) AND (dataset_type_ref = 29) AND (archived IS NULL))
+  Filter: (tstzrange(from_dt, to_dt, '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange)
+  Heap Blocks: exact=1443
+  ->  BitmapAnd  (cost=25711.69..25711.69 rows=950 width=0) (actual time=539.072..539.072 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_pure_lat_lon  (cost=0.00..809.07 rows=11665 width=0) (actual time=463.803..463.803 rows=60316 loops=1)
+              Index Cond: ((agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range))
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref  (cost=0.00..24901.90 rows=1347929 width=0) (actual time=72.492..72.492 rows=1288777 loops=1)
+              Index Cond: (dataset_type_ref = 29)
+Planning time: 0.294 ms
+Execution time: 541.837 ms
 
  */
 
