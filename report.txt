@@ -5,6 +5,9 @@ It is important to note that query speed and time testing was conducted on a loc
 --------------------------------------------------------------------------------------------------------------
 Find missing Indexes
 --------------------------------------------------------------------------------------------------------------
+Some were deleted with concerns about query planner optimisation/confusion. This stackoverflow answer seems to deem that concern unnecessary:
+https://stackoverflow.com/questions/18507758/number-of-indexes-per-table
+
 Based on what indexes currently exist, it was possible to identify missing indexes based on their metadata_type_ref and a count of indexes for each product.
 
 <include table identifying missing indexes>

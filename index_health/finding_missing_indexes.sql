@@ -35,7 +35,7 @@ with for_counting as (
       select id, name, metadata_type_ref
       from agdc.dataset_type
       )
-    select dataset_type_ref, name, metadata_type_ref,
+    select t.id as dataset_type_ref, name, metadata_type_ref,
            substring(indexname from 'dix_'||name||'_(.*)') as "index_attributes"
     from index_info i
            right outer join dataset_type_info t
@@ -45,7 +45,7 @@ with for_counting as (
 select dataset_type_ref, name, metadata_type_ref, count(*) as "count", array_agg(index_attributes) as "index_attributes"
 from for_counting
 group by dataset_type_ref, name, metadata_type_ref
-order by metadata_type_ref, count desc, index_attributes;
+order by metadata_type_ref, dataset_type_ref, count desc, index_attributes;
 
 
 -----------------------------------------------------------------------------------

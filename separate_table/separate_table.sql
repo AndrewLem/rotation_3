@@ -25,16 +25,17 @@ select id,
 from agdc.dataset
 where metadata_type_ref = 1;
 
-CREATE OR REPLACE FUNCTION insert_into_eo_1_data(_id uuid, _dataset_type_ref smallint, _metadata jsonb)
+CREATE OR REPLACE FUNCTION insert_into_eo_1_data(_id uuid, _dataset_type_ref smallint,
+                                                 _archived timestamp with time zone, _metadata jsonb)
   RETURNS void AS
 $$
 DECLARE
 BEGIN
-  INSERT INTO agdc.eo_1_data(id, dataset_type_ref,
+  INSERT INTO agdc.eo_1_data(id, dataset_type_ref, archived,
                              lat_least, lat_greatest, lon_least, lon_greatest,
                              from_dt, to_dt,
                              platform)
-  VALUES (_id, _dataset_type_ref,
+  VALUES (_id, _dataset_type_ref, _archived,
           LEAST((_metadata #>> '{extent,coord,ur,lat}'::text[])::double precision,
                 (_metadata #>> '{extent,coord,lr,lat}'::text[])::double precision,
                 (_metadata #>> '{extent,coord,ul,lat}'::text[])::double precision,
@@ -66,7 +67,7 @@ DECLARE
 BEGIN
   IF TG_OP = 'INSERT' THEN
     IF NEW.metadata_type_ref = 1 THEN
-      EXECUTE insert_into_eo_1_data(NEW.id, NEW.dataset_type_ref, NEW.metadata);
+      EXECUTE insert_into_eo_1_data(NEW.id, NEW.dataset_type_ref, NEW.archived, NEW.metadata);
       RETURN NEW;
     END IF;
   ELSIF TG_OP = 'DELETE' THEN
@@ -130,7 +131,6 @@ CREATE INDEX eo_1_pure_dataset_type_ref
 
 
 
-
 CREATE INDEX eo_1_pure_lat_lon
   ON agdc.eo_1_data
     USING gist (agdc.float8range(lat_least, lat_greatest, '[]'::text),
@@ -140,15 +140,14 @@ CREATE INDEX eo_1_pure_time
   ON agdc.eo_1_data
     USING gist (tstzrange(from_dt, to_dt, '[]'::text));
 
--- todo: run all below
 
-CREATE INDEX eo_1_pure_lat_lon_2
+CREATE INDEX eo_1_pure_lat
   ON agdc.eo_1_data
-    (agdc.float8range(lat_least, lat_greatest, '[]'::text),
-     agdc.float8range(lon_least, lon_greatest, '[]'::text));
+    USING gist (agdc.float8range(lat_least, lat_greatest, '[]'::text));
 
-CREATE INDEX eo_1_pure_time_2
+CREATE INDEX eo_1_pure_lon
   ON agdc.eo_1_data
-    (tstzrange(from_dt, to_dt, '[]'::text));
+    USING gist (agdc.float8range(lon_least, lon_greatest, '[]'::text));
+
 
 analyse agdc.eo_1_data;
