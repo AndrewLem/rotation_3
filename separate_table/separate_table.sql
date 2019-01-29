@@ -131,23 +131,52 @@ CREATE INDEX eo_1_pure_dataset_type_ref
 
 
 
-CREATE INDEX eo_1_pure_lat_lon
+CREATE INDEX eo_1_pure_lat_lon_ranges
   ON agdc.eo_1_data
     USING gist (agdc.float8range(lat_least, lat_greatest, '[]'::text),
                 agdc.float8range(lon_least, lon_greatest, '[]'::text));
 
-CREATE INDEX eo_1_pure_time
+CREATE INDEX eo_1_pure_time_range
   ON agdc.eo_1_data
     USING gist (tstzrange(from_dt, to_dt, '[]'::text));
 
 
-CREATE INDEX eo_1_pure_lat
+CREATE INDEX eo_1_pure_lat_range
   ON agdc.eo_1_data
     USING gist (agdc.float8range(lat_least, lat_greatest, '[]'::text));
 
-CREATE INDEX eo_1_pure_lon
+CREATE INDEX eo_1_pure_lon_range
   ON agdc.eo_1_data
     USING gist (agdc.float8range(lon_least, lon_greatest, '[]'::text));
+
+CREATE INDEX eo_1_lat_least_index
+  ON agdc.eo_1_data
+    (lat_least);
+
+CREATE INDEX eo_1_lat_greatest_index
+  ON agdc.eo_1_data
+    (lat_greatest);
+
+CREATE INDEX eo_1_lon_least_index
+  ON agdc.eo_1_data
+    (lon_least);
+
+CREATE INDEX eo_1_lon_greatest_index
+  ON agdc.eo_1_data
+    (lon_greatest);
+
+CREATE INDEX eo_1_from_dt_index
+  ON agdc.eo_1_data
+    (from_dt);
+
+CREATE INDEX eo_1_to_dt_index
+  ON agdc.eo_1_data
+    (to_dt);
+
+CREATE INDEX eo_1_platform_index
+  ON agdc.eo_1_data
+    (platform);
+
 
 
 analyse agdc.eo_1_data;

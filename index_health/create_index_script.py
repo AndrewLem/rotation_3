@@ -53,7 +53,7 @@ def identify_template_targets_and_missing_indexes(connection):
                     select dataset_type_ref, name, metadata_type_ref,
                         substring(indexname from 'dix_'||name||'_(.*)') as "index_attributes"
                     from index_info i
-                           left outer join dataset_type_info t
+                           right outer join dataset_type_info t
                                            on i.dataset_type_ref = t.id
                     order by index_attributes
                 )

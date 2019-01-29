@@ -45,6 +45,8 @@ Depending on the requirements of dea-dashboard and datacube-ows - these are the 
 --------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------
 Research performance (and limitations) of the current dataset spatial and temporal search query
+
+- index appears to slow down the query in some cases
 --------------------------------------------------------------------------------------------------------------
 Main current limitation is the retrieval of data from the JSON followed by the least or greatest function to identify the border conditions for each row. If new columns were added to dataset that contained the precomputed values that most queries refer to it should be possible to improve query speeds.
 
