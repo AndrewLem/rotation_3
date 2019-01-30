@@ -18,6 +18,8 @@ Fix Missing Indexes
 --------------------------------------------------------------------------------------------------------------
 After identifying which indexes are missing, the product per metadata_type_ref with the most indexes are used as index templates to fill the missing indexes.
 
+Note: whether an index is gist or btree is not visible when double-clicking the index in PyCharm, but is visible in pg_indexes
+
 <refer to previous table to identify which indexes were used as templates>
 
 --------------------------------------------------------------------------------------------------------------
@@ -73,3 +75,38 @@ The state of the database was only meant to be temporary but followup measures w
 the new structure was faster for the slow queries - not sure about the impact on the already fast queries
 - need to test queries that aren't slow
 
+
+
+
+------
+Either way, CLUSTER using the multicolumn index from above can help performance:
+
+`CLUSTER ips USING index_ips_begin_end_ip_num;`
+
+This way, candidates fulfilling your first condition are packed onto the same or adjacent data pages. Can help performance a lot with if you have lots of rows per value of the first column. Else it is hardly effective.
+
+https://stackoverflow.com/questions/1251636/what-do-clustered-and-non-clustered-index-actually-mean?rq=1
+
+"""
+A clustered index means you are telling the database to store close values actually close to one another on the disk. This has the benefit of rapid scan / retrieval of records falling into some range of clustered index values.
+
+For example, you have two tables, Customer and Order:
+
+Customer
+----------
+ID
+Name
+Address
+
+Order
+----------
+ID
+CustomerID
+Price
+
+If you wish to quickly retrieve all orders of one particular customer, you may wish to create a clustered index on the "CustomerID" column of the Order table. This way the records with the same CustomerID will be physically stored close to each other on disk (clustered) which speeds up their retrieval.
+
+P.S. The index on CustomerID will obviously be not unique, so you either need to add a second field to "uniquify" the index or let the database handle that for you but that's another story.
+
+Regarding multiple indexes. You can have only one clustered index per table because this defines how the data is physically arranged. If you wish an analogy, imagine a big room with many tables in it. You can either put these tables to form several rows or pull them all together to form a big conference table, but not both ways at the same time. A table can have other indexes, they will then point to the entries in the clustered index which in its turn will finally say where to find the actual data.
+"""

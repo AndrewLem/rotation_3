@@ -93,61 +93,6 @@ alter table agdc.eo_1_data
   add constraint eo_1_data_pk
     primary key (id);
 
-/*
-May potentially need to create a btree_gist extension if the following error occurs:
-[42704] ERROR: data type smallint has no default operator class for access method "gist"
-CREATE EXTENSION btree_gist;
-*/
-CREATE INDEX eo_1_lat_lon_time
-  ON agdc.eo_1_data
-    USING gist (dataset_type_ref,
-                agdc.float8range(lat_least, lat_greatest, '[]'::text),
-                agdc.float8range(lon_least, lon_greatest, '[]'::text),
-                tstzrange(from_dt, to_dt, '[]'::text))
-  WHERE ((archived IS NULL));
-
-CREATE INDEX eo_1_time_lat_lon
-  ON agdc.eo_1_data
-    USING gist (dataset_type_ref,
-                tstzrange(from_dt, to_dt, '[]'::text),
-                agdc.float8range(lat_least, lat_greatest, '[]'::text),
-                agdc.float8range(lon_least, lon_greatest, '[]'::text))
-  WHERE ((archived IS NULL));
-
-CREATE INDEX eo_1_platform
-  ON agdc.eo_1_data
-    (dataset_type_ref,
-     platform)
-  WHERE ((archived IS NULL));
-
-CREATE INDEX eo_1_dataset_type_ref
-  ON agdc.eo_1_data
-    (dataset_type_ref)
-  WHERE ((archived IS NULL));
-
-CREATE INDEX eo_1_pure_dataset_type_ref
-  ON agdc.eo_1_data
-    (dataset_type_ref);
-
-
-
-CREATE INDEX eo_1_pure_lat_lon_ranges
-  ON agdc.eo_1_data
-    USING gist (agdc.float8range(lat_least, lat_greatest, '[]'::text),
-                agdc.float8range(lon_least, lon_greatest, '[]'::text));
-
-CREATE INDEX eo_1_pure_time_range
-  ON agdc.eo_1_data
-    USING gist (tstzrange(from_dt, to_dt, '[]'::text));
-
-
-CREATE INDEX eo_1_pure_lat_range
-  ON agdc.eo_1_data
-    USING gist (agdc.float8range(lat_least, lat_greatest, '[]'::text));
-
-CREATE INDEX eo_1_pure_lon_range
-  ON agdc.eo_1_data
-    USING gist (agdc.float8range(lon_least, lon_greatest, '[]'::text));
 
 CREATE INDEX eo_1_lat_least_index
   ON agdc.eo_1_data
@@ -177,6 +122,90 @@ CREATE INDEX eo_1_platform_index
   ON agdc.eo_1_data
     (platform);
 
+CREATE INDEX eo_1_dataset_type_ref_index
+  ON agdc.eo_1_data
+    (dataset_type_ref);
 
+CREATE INDEX eo_1_archived_index
+  ON agdc.eo_1_data
+    (archived);
+
+CREATE INDEX eo_1_dataset_type_ref_not_archived_index
+  ON agdc.eo_1_data
+    (dataset_type_ref)
+  WHERE archived IS NULL;
+
+/*
+May potentially need to create a btree_gist extension if the following error occurs:
+[42704] ERROR: data type smallint has no default operator class for access method "gist"
+CREATE EXTENSION btree_gist;
+*/
+
+CREATE INDEX cluster_index
+  ON agdc.eo_1_data
+    USING gist (archived,
+                dataset_type_ref,
+                agdc.float8range(lat_least, lat_greatest, '[]'::text),
+                agdc.float8range(lon_least, lon_greatest, '[]'::text),
+                tstzrange(from_dt, to_dt, '[]'::text));
+
+CREATE INDEX eo_1_lat_lon_time
+  ON agdc.eo_1_data
+    USING gist (dataset_type_ref,
+                agdc.float8range(lat_least, lat_greatest, '[]'::text),
+                agdc.float8range(lon_least, lon_greatest, '[]'::text),
+                tstzrange(from_dt, to_dt, '[]'::text))
+  WHERE ((archived IS NULL));
+
+CREATE INDEX eo_1_time_lat_lon
+  ON agdc.eo_1_data
+    USING gist (dataset_type_ref,
+                tstzrange(from_dt, to_dt, '[]'::text),
+                agdc.float8range(lat_least, lat_greatest, '[]'::text),
+                agdc.float8range(lon_least, lon_greatest, '[]'::text))
+  WHERE ((archived IS NULL));
+
+CREATE INDEX eo_1_platform
+  ON agdc.eo_1_data
+    (dataset_type_ref,
+     platform)
+  WHERE ((archived IS NULL));
+
+
+
+CREATE INDEX eo_1_pure_lat_lon_ranges
+  ON agdc.eo_1_data
+    USING gist (agdc.float8range(lat_least, lat_greatest, '[]'::text),
+                agdc.float8range(lon_least, lon_greatest, '[]'::text));
+
+CREATE INDEX eo_1_pure_time_range
+  ON agdc.eo_1_data
+    USING gist (tstzrange(from_dt, to_dt, '[]'::text));
+
+
+CREATE INDEX eo_1_pure_lat_range
+  ON agdc.eo_1_data
+    USING gist (agdc.float8range(lat_least, lat_greatest, '[]'::text));
+
+CREATE INDEX eo_1_pure_lon_range
+  ON agdc.eo_1_data
+    USING gist (agdc.float8range(lon_least, lon_greatest, '[]'::text));
+
+
+
+CREATE INDEX cluster_index
+  ON agdc.eo_1_data
+    USING gist (archived,
+                dataset_type_ref,
+                agdc.float8range(lat_least, lat_greatest, '[]'::text),
+                agdc.float8range(lon_least, lon_greatest, '[]'::text),
+                tstzrange(from_dt, to_dt, '[]'::text));
+
+
+CLUSTER agdc.eo_1_data USING cluster_index;
 
 analyse agdc.eo_1_data;
+
+
+
+
