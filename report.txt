@@ -8,6 +8,8 @@ Find missing Indexes
 Some were deleted with concerns about query planner optimisation/confusion. This stackoverflow answer seems to deem that concern unnecessary:
 https://stackoverflow.com/questions/18507758/number-of-indexes-per-table
 
+However extra indexes that aren't used do cost more space and minor impact on insert times.
+
 Based on what indexes currently exist, it was possible to identify missing indexes based on their metadata_type_ref and a count of indexes for each product.
 
 <include table identifying missing indexes>
@@ -19,6 +21,8 @@ Fix Missing Indexes
 After identifying which indexes are missing, the product per metadata_type_ref with the most indexes are used as index templates to fill the missing indexes.
 
 Note: whether an index is gist or btree is not visible when double-clicking the index in PyCharm, but is visible in pg_indexes
+
+See file: create_missing_indexes_script.py
 
 <refer to previous table to identify which indexes were used as templates>
 
@@ -77,8 +81,11 @@ the new structure was faster for the slow queries - not sure about the impact on
 
 
 
-
 ------
+Clustering
+------
+***NB: Locks table for duration of cluster command
+
 Either way, CLUSTER using the multicolumn index from above can help performance:
 
 `CLUSTER ips USING index_ips_begin_end_ip_num;`
@@ -110,3 +117,5 @@ P.S. The index on CustomerID will obviously be not unique, so you either need to
 
 Regarding multiple indexes. You can have only one clustered index per table because this defines how the data is physically arranged. If you wish an analogy, imagine a big room with many tables in it. You can either put these tables to form several rows or pull them all together to form a big conference table, but not both ways at the same time. A table can have other indexes, they will then point to the entries in the clustered index which in its turn will finally say where to find the actual data.
 """
+
+https://bclennox.com/the-postgres-cluster-command
