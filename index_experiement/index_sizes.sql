@@ -1,1 +1,2 @@
-SELECT pg_size_pretty(pg_table_size(dix_bom_rainfall_grids_platform)) FROM dual;
+SELECT indexrelname, pg_size_pretty(pg_relation_size(indexrelid)) AS index_size, pg_relation_size(indexrelid) AS index_bytes FROM pg_stat_user_indexes
+ORDER BY index_bytes DESC;
