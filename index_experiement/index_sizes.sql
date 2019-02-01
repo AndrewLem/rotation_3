@@ -1,1 +1,1 @@
-pg_size_pretty(pg_table_size(dix_bom_rainfall_grids_platform))
+SELECT pg_size_pretty(pg_table_size(dix_bom_rainfall_grids_platform)) FROM dual;
