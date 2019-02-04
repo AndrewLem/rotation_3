@@ -155,6 +155,9 @@ show enable_indexscan;
 
 SET seq_page_cost = 2;
 
+show seq_page_cost;
+
+
 --- temporarily disable using an index in query:
 update pg_index
 set indisvalid = false

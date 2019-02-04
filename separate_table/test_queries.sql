@@ -2,7 +2,7 @@
 -- Q1
 ------
 EXPLAIN ANALYSE
-  SELECT agdc.dataset.id,
+  SELECT agdc.dataset.id /*,
          agdc.dataset.metadata_type_ref,
          agdc.dataset.dataset_type_ref,
          agdc.dataset.metadata,
@@ -16,7 +16,7 @@ EXPLAIN ANALYSE
               WHERE selected_dataset_location.dataset_ref = agdc.dataset.id
                 AND selected_dataset_location.archived IS NULL
               ORDER BY selected_dataset_location.added DESC,
-                       selected_dataset_location.id DESC)) AS uris
+                       selected_dataset_location.id DESC)) AS uris */
   FROM agdc.dataset
   WHERE agdc.dataset.archived IS NULL
     AND (agdc.float8range(
@@ -29,7 +29,7 @@ EXPLAIN ANALYSE
                       CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lon}') AS DOUBLE PRECISION),
                       CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lon}') AS DOUBLE PRECISION)),
              '[]')
-    && agdc.float8range(152.3, 152.34, '[)'))
+    && agdc.float8range(150, 151, '[)'))
     AND (agdc.float8range(
              least(CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lat}') AS DOUBLE PRECISION),
                    CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
@@ -40,7 +40,7 @@ EXPLAIN ANALYSE
                       CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
                       CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)),
              '[]')
-    && agdc.float8range(-24.89, -24.85, '[)'))
+    && agdc.float8range(-26, -25, '[)'))
     AND (tstzrange(agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, from_dt}')),
                    agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, to_dt}')),
                    '[]') &&
@@ -60,6 +60,35 @@ Index Scan using dix_ls7_nbar_albers_time_lat_lon on dataset  (cost=0.41..17.04 
                 Filter: (archived IS NULL)
 Planning time: 8506.647 ms
 Execution time: 350.769 ms
+
+--
+
+Index Scan using dix_ls7_nbar_albers_time_lat_lon on dataset  (cost=0.41..805254.06 rows=1 width=1372) (actual time=138298.256..666359.120 rows=5 loops=1)
+  Index Cond: ((tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["2017-06-01 00:00:00+00","2017-09-01 00:00:00+00")'::tstzrange) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-24.890000000000001,-24.850000000000001)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[152.30000000000001,152.34)'::agdc.float8range))
+  SubPlan 1
+    ->  Sort  (cost=805245.61..805245.62 rows=1 width=44) (actual time=133207.622..133207.622 rows=1 loops=5)
+          Sort Key: selected_dataset_location.added DESC, selected_dataset_location.id DESC
+          Sort Method: quicksort  Memory: 25kB
+          ->  Seq Scan on dataset_location selected_dataset_location  (cost=0.00..805245.60 rows=1 width=44) (actual time=19374.758..133207.568 rows=1 loops=5)
+                Filter: ((archived IS NULL) AND (dataset_ref = dataset.id))
+                Rows Removed by Filter: 19163487
+Planning time: 432.544 ms
+Execution time: 666364.472 ms
+
+--
+
+Index Scan using dix_ls7_nbar_albers_time_lat_lon on dataset  (cost=0.41..8.43 rows=1 width=16) (actual time=120.734..265.847 rows=5 loops=1)
+  Index Cond: ((tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["2017-06-01 00:00:00+00","2017-09-01 00:00:00+00")'::tstzrange) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-24.890000000000001,-24.850000000000001)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[152.19999999999999,152.34)'::agdc.float8range))
+Planning time: 5611.171 ms
+Execution time: 290.299 ms
+
+Index Scan using dix_ls7_nbar_albers_time_lat_lon on dataset  (cost=0.41..8.43 rows=1 width=16) (actual time=1.175..544.226 rows=61 loops=1)
+  Index Cond: ((tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["2017-06-01 00:00:00+00","2017-09-01 00:00:00+00")'::tstzrange) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-26,-25)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[150,151)'::agdc.float8range))
+Planning time: 2.566 ms
+Execution time: 544.314 ms
+
+
+
  */
 
 
@@ -69,9 +98,9 @@ EXPLAIN ANALYSE
   WHERE archived IS NULL
     AND dataset_type_ref = 21
     AND (agdc.float8range(lat_least, lat_greatest, '[]') &&
-         agdc.float8range(-24.89, -24.85, '[)'))
+         agdc.float8range(-26, -25, '[)'))
     AND (agdc.float8range(lon_least, lon_greatest, '[]') &&
-         agdc.float8range(152.3, 152.34, '[)'))
+         agdc.float8range(150, 151, '[)'))
     AND (tstzrange(from_dt, to_dt, '[]') &&
          tstzrange('2017-06-01 00:00:00+00', '2017-09-01 00:00:00+00', '[)'))
 ;
@@ -114,6 +143,38 @@ Bitmap Heap Scan on eo_1_data  (cost=13.91..485.46 rows=10 width=16) (actual tim
 Planning time: 0.258 ms
 Execution time: 19919.863 ms
 
+--
+
+Bitmap Heap Scan on eo_1_data  (cost=14.19..481.81 rows=10 width=16) (actual time=9363.499..9725.615 rows=5 loops=1)
+  Recheck Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-24.890000000000001,-24.850000000000001)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[152.30000000000001,152.34)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["2017-06-01 00:00:00+00","2017-09-01 00:00:00+00")'::tstzrange))
+  Filter: (dataset_type_ref = 21)
+  Rows Removed by Filter: 59
+  Heap Blocks: exact=45
+  ->  Bitmap Index Scan on eo_1_data_cluster_index  (cost=0.00..14.19 rows=118 width=0) (actual time=9284.219..9284.219 rows=64 loops=1)
+        Index Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-24.890000000000001,-24.850000000000001)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[152.30000000000001,152.34)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["2017-06-01 00:00:00+00","2017-09-01 00:00:00+00")'::tstzrange))
+Planning time: 0.290 ms
+Execution time: 9725.667 ms
+
+Bitmap Heap Scan on eo_1_data  (cost=14.19..481.81 rows=10 width=16) (actual time=9447.655..9809.476 rows=5 loops=1)
+  Recheck Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-24.890000000000001,-24.850000000000001)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[152.30000000000001,152.34)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["2017-06-01 00:00:00+00","2017-09-01 00:00:00+00")'::tstzrange))
+  Filter: (dataset_type_ref = 21)
+  Rows Removed by Filter: 59
+  Heap Blocks: exact=45
+  ->  Bitmap Index Scan on eo_1_data_cluster_index  (cost=0.00..14.19 rows=118 width=0) (actual time=9368.208..9368.208 rows=64 loops=1)
+        Index Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-24.890000000000001,-24.850000000000001)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[152.30000000000001,152.34)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["2017-06-01 00:00:00+00","2017-09-01 00:00:00+00")'::tstzrange))
+Planning time: 871.613 ms
+Execution time: 9891.026 ms
+
+Bitmap Heap Scan on eo_1_data  (cost=93.62..3475.06 rows=72 width=16) (actual time=19947.673..22243.805 rows=61 loops=1)
+  Recheck Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-26,-25)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[150,151)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["2017-06-01 00:00:00+00","2017-09-01 00:00:00+00")'::tstzrange))
+  Filter: (dataset_type_ref = 21)
+  Rows Removed by Filter: 705
+  Heap Blocks: exact=489
+  ->  Bitmap Index Scan on eo_1_data_cluster_index  (cost=0.00..93.60 rows=879 width=0) (actual time=19871.151..19871.151 rows=766 loops=1)
+        Index Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-26,-25)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[150,151)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["2017-06-01 00:00:00+00","2017-09-01 00:00:00+00")'::tstzrange))
+Planning time: 0.341 ms
+Execution time: 22243.877 ms
+
  */
 
 ------
@@ -133,7 +194,7 @@ EXPLAIN ANALYSE
                       CAST((agdc.dataset.metadata #>> '{extent, coord, lr, lat}') AS DOUBLE PRECISION),
                       CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lat}') AS DOUBLE PRECISION),
                       CAST((agdc.dataset.metadata #>> '{extent, coord, ll, lat}') AS DOUBLE PRECISION)),
-             '[]') && '[ -36.18348132582486, -35.22313291663772)')
+             '[]') && '[ -37.18348132582486, -35.22313291663772)')
     AND (agdc.float8range(
              least(CAST((agdc.dataset.metadata #>> '{extent, coord, ul, lon}') AS DOUBLE PRECISION),
                    CAST((agdc.dataset.metadata #>> '{extent, coord, ur, lon}') AS DOUBLE PRECISION),
@@ -169,6 +230,30 @@ Index Scan using tix_active_dataset_type on dataset  (cost=0.44..1315397.23 rows
 Planning time: 2.948 ms
 Execution time: 310677.691 ms
 
+----
+
+Index Scan using tix_active_dataset_type on dataset  (cost=0.44..335289.48 rows=63 width=16) (actual time=470.930..120828.668 rows=1575 loops=1)
+  Index Cond: (dataset_type_ref = 92)
+  Filter: ((agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-36.183481325824857,-35.223132916637717)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[137.19710243283376,138.44426811220131)'::agdc.float8range))
+  Rows Removed by Filter: 600499
+Planning time: 907.712 ms
+Execution time: 120829.178 ms
+
+Index Scan using tix_active_dataset_type on dataset  (cost=0.44..335289.48 rows=63 width=16) (actual time=144.179..116533.991 rows=1949 loops=1)
+  Index Cond: (dataset_type_ref = 92)
+  Filter: ((agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-37.183481325824857,-35.223132916637717)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[137.19710243283376,138.44426811220131)'::agdc.float8range))
+  Rows Removed by Filter: 600125
+Planning time: 2.738 ms
+Execution time: 116534.474 ms
+
+Index Scan using tix_active_dataset_type on dataset  (cost=0.44..335289.48 rows=63 width=16) (actual time=1039.177..119067.853 rows=1949 loops=1)
+  Index Cond: (dataset_type_ref = 92)
+  Filter: ((agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-37.183481325824857,-35.223132916637717)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[137.19710243283376,138.44426811220131)'::agdc.float8range))
+  Rows Removed by Filter: 600125
+Planning time: 2.642 ms
+Execution time: 119068.326 ms
+
+
  */
 
 EXPLAIN ANALYSE
@@ -193,6 +278,18 @@ Bitmap Heap Scan on extra_dataset_info  (cost=10762.39..274450.22 rows=56 width=
 Planning time: 0.236 ms
 Execution time: 5126.022 ms
 
+Bitmap Heap Scan on eo_1_data  (cost=15115.58..20003.20 rows=1286 width=16) (actual time=46890.178..47140.304 rows=1575 loops=1)
+  Recheck Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-36.183481325824857,-35.223132916637717)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[137.19710243283376,138.44426811220131)'::agdc.float8range) AND (dataset_type_ref = 92))
+  Heap Blocks: exact=117
+  ->  BitmapAnd  (cost=15115.58..15115.58 rows=1286 width=0) (actual time=46871.518..46871.518 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_data_cluster_index  (cost=0.00..3308.53 rows=33289 width=0) (actual time=46417.111..46417.111 rows=81052 loops=1)
+              Index Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-36.183481325824857,-35.223132916637717)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[137.19710243283376,138.44426811220131)'::agdc.float8range))
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_index  (cost=0.00..11806.16 rows=639163 width=0) (actual time=453.049..453.049 rows=602074 loops=1)
+              Index Cond: (dataset_type_ref = 92)
+Planning time: 309.723 ms
+Execution time: 47149.696 ms
+
+
 ----------------
 with gist index:
 ----------------
@@ -206,6 +303,19 @@ Bitmap Heap Scan on eo_1_data  (cost=13524.65..18234.37 rows=1238 width=16) (act
               Index Cond: (dataset_type_ref = 92)
 Planning time: 0.491 ms
 Execution time: 226021.306 ms
+
+--
+
+Bitmap Heap Scan on eo_1_data  (cost=15115.58..20003.20 rows=1286 width=16) (actual time=46662.529..46913.022 rows=1575 loops=1)
+  Recheck Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-36.183481325824857,-35.223132916637717)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[137.19710243283376,138.44426811220131)'::agdc.float8range) AND (dataset_type_ref = 92))
+  Heap Blocks: exact=117
+  ->  BitmapAnd  (cost=15115.58..15115.58 rows=1286 width=0) (actual time=46643.177..46643.177 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_data_cluster_index  (cost=0.00..3308.53 rows=33289 width=0) (actual time=46189.339..46189.339 rows=81052 loops=1)
+              Index Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-36.183481325824857,-35.223132916637717)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[137.19710243283376,138.44426811220131)'::agdc.float8range))
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_index  (cost=0.00..11806.16 rows=639163 width=0) (actual time=452.483..452.483 rows=602074 loops=1)
+              Index Cond: (dataset_type_ref = 92)
+Planning time: 0.251 ms
+Execution time: 46930.621 ms
 
 
  */
@@ -260,6 +370,18 @@ Index Scan using dix_ls8_nbart_scene_time_lat_lon on dataset  (cost=0.28..8.30 r
 Planning time: 3.449 ms
 Execution time: 3067.853 ms
 
+Index Scan using dix_ls8_nbart_scene_time_lat_lon on dataset  (cost=0.28..8.30 rows=1 width=16) (actual time=81.659..1856.827 rows=374 loops=1)
+  Index Cond: ((tstzrange(LEAST(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,center_dt}'::text[]))), GREATEST(agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,center_dt}'::text[]))), '[]'::text) && '["2013-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-31.341862288997746,-31.340612711002255)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[121.64698252709579,121.64870963957088)'::agdc.float8range))
+Planning time: 3.112 ms
+Execution time: 1857.045 ms
+
+--
+
+Index Scan using dix_ls8_nbart_scene_time_lat_lon on dataset  (cost=0.28..8.30 rows=1 width=16) (actual time=70.554..1993.243 rows=374 loops=1)
+  Index Cond: ((tstzrange(LEAST(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,center_dt}'::text[]))), GREATEST(agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,center_dt}'::text[]))), '[]'::text) && '["2013-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-31.341862288997746,-31.340612711002255)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[121.64698252709579,121.64870963957088)'::agdc.float8range))
+Planning time: 2.914 ms
+Execution time: 1993.686 ms
+
  */
 
 EXPLAIN ANALYSE
@@ -284,6 +406,7 @@ Index Scan using dix_extra_dataset_info_dataset_type_ref on extra_dataset_info  
 Planning time: 0.199 ms
 Execution time: 4856.852 ms
 
+
 ----------------
 with gist index:
 ----------------
@@ -304,6 +427,27 @@ Bitmap Heap Scan on eo_1_data  (cost=447.48..455.52 rows=2 width=16) (actual tim
 Planning time: 0.231 ms
 Execution time: 301.723 ms
 
+--
+
+Bitmap Heap Scan on eo_1_data  (cost=542.32..550.36 rows=2 width=16) (actual time=37.262..37.262 rows=0 loops=1)
+  Recheck Cond: ((dataset_type_ref = 16) AND (archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-31.341862288997746,-31.340612711002255)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[121.64698252709579,121.64870963957088)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["2013-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange))
+  ->  BitmapAnd  (cost=542.32..542.32 rows=2 width=0) (actual time=37.256..37.256 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_index  (cost=0.00..199.79 rows=10581 width=0) (actual time=37.255..37.255 rows=0 loops=1)
+              Index Cond: (dataset_type_ref = 16)
+        ->  Bitmap Index Scan on eo_1_data_cluster_index  (cost=0.00..342.28 rows=3324 width=0) (never executed)
+              Index Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-31.341862288997746,-31.340612711002255)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[121.64698252709579,121.64870963957088)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["2013-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange))
+Planning time: 0.412 ms
+Execution time: 37.305 ms
+
+Bitmap Heap Scan on eo_1_data  (cost=542.32..550.36 rows=2 width=16) (actual time=38.968..38.968 rows=0 loops=1)
+  Recheck Cond: ((dataset_type_ref = 16) AND (archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-31.341862288997746,-31.340612711002255)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[121.64698252709579,121.64870963957088)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["2013-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange))
+  ->  BitmapAnd  (cost=542.32..542.32 rows=2 width=0) (actual time=38.964..38.964 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_index  (cost=0.00..199.79 rows=10581 width=0) (actual time=38.962..38.962 rows=0 loops=1)
+              Index Cond: (dataset_type_ref = 16)
+        ->  Bitmap Index Scan on eo_1_data_cluster_index  (cost=0.00..342.28 rows=3324 width=0) (never executed)
+              Index Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-31.341862288997746,-31.340612711002255)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[121.64698252709579,121.64870963957088)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["2013-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange))
+Planning time: 0.299 ms
+Execution time: 39.015 ms
 
  */
 
@@ -332,6 +476,19 @@ Index Scan using dix_ls8_nbar_albers_time_lat_lon on dataset  (cost=0.41..25445.
   Index Cond: (tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["2017-01-01 00:00:00+00","2018-01-01 23:59:59.999999+00")'::tstzrange)
 Planning time: 2.346 ms
 Execution time: 286973.741 ms
+
+Index Scan using dix_ls8_nbar_albers_time_lat_lon on dataset  (cost=0.29..28474.40 rows=6978 width=16) (actual time=164.442..356434.139 rows=112381 loops=1)
+  Index Cond: (tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["2017-01-01 00:00:00+00","2018-01-01 23:59:59.999999+00")'::tstzrange)
+Planning time: 1.930 ms
+Execution time: 356465.279 ms
+
+--
+
+Index Scan using dix_ls8_nbar_albers_time_lat_lon on dataset  (cost=0.29..28474.40 rows=6978 width=16) (actual time=145.338..356212.903 rows=112381 loops=1)
+  Index Cond: (tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["2017-01-01 00:00:00+00","2018-01-01 23:59:59.999999+00")'::tstzrange)
+Planning time: 1.609 ms
+Execution time: 356243.073 ms
+
 
  */
 
@@ -391,6 +548,21 @@ Bitmap Heap Scan on eo_1_data  (cost=58263.89..181317.02 rows=48782 width=16) (a
 Planning time: 0.210 ms
 Execution time: 64749.292 ms
 
+--
+
+Bitmap Heap Scan on eo_1_data  (cost=128157.22..255827.45 rows=51413 width=16) (actual time=1584745.210..1599783.020 rows=112381 loops=1)
+  Recheck Cond: ((dataset_type_ref = 19) AND (archived IS NULL) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["2017-01-01 00:00:00+00","2018-01-01 23:59:59.999999+00")'::tstzrange))
+  Rows Removed by Index Recheck: 197120
+  Heap Blocks: exact=14381
+  ->  BitmapAnd  (cost=128157.22..128157.22 rows=51413 width=0) (actual time=1584679.470..1584679.470 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_index  (cost=0.00..13233.21 rows=716370 width=0) (actual time=625.403..625.403 rows=696974 loops=1)
+              Index Cond: (dataset_type_ref = 19)
+        ->  Bitmap Index Scan on eo_1_data_cluster_index  (cost=0.00..114898.06 rows=1187364 width=0) (actual time=1584046.387..1584046.387 rows=1152077 loops=1)
+              Index Cond: ((archived IS NULL) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["2017-01-01 00:00:00+00","2018-01-01 23:59:59.999999+00")'::tstzrange))
+Planning time: 0.265 ms
+Execution time: 1599791.852 ms
+
+
 
  */
 
@@ -424,6 +596,16 @@ Index Scan using dix_wofs_albers_time_lat_lon on dataset  (cost=0.41..104983.32 
   Index Cond: (tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["2018-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange)
 Planning time: 836.768 ms
 Execution time: 267703.443 ms
+
+--
+
+Index Scan using tix_active_dataset_type on dataset  (cost=0.44..2259000.29 rows=25146 width=16) (actual time=333.119..139601.574 rows=129669 loops=1)
+  Index Cond: (dataset_type_ref = 77)
+  Filter: (tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["2018-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange)
+  Rows Removed by Filter: 2637408
+Planning time: 2.180 ms
+Execution time: 139610.921 ms
+
 
  */
 
@@ -473,6 +655,20 @@ Bitmap Heap Scan on eo_1_data  (cost=52947.29..331763.90 rows=220715 width=16) (
 Planning time: 0.225 ms
 Execution time: 52938.966 ms
 
+--
+
+Bitmap Heap Scan on eo_1_data  (cost=49564.76..350983.44 rows=216722 width=16) (actual time=2132.945..31308.457 rows=129669 loops=1)
+  Recheck Cond: ((dataset_type_ref = 77) AND (archived IS NULL))
+  Rows Removed by Index Recheck: 449750
+  Filter: (tstzrange(from_dt, to_dt, '[]'::text) && '["2018-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange)
+  Rows Removed by Filter: 2637408
+  Heap Blocks: exact=31127 lossy=26768
+  ->  Bitmap Index Scan on eo_1_dataset_type_ref_not_archived_index  (cost=0.00..49510.58 rows=2684553 width=0) (actual time=2110.951..2110.952 rows=2767077 loops=1)
+        Index Cond: (dataset_type_ref = 77)
+Planning time: 0.259 ms
+Execution time: 31317.909 ms
+
+
  */
 
 ------
@@ -519,6 +715,13 @@ Index Scan using dix_ls7_nbart_albers_time_lat_lon on dataset  (cost=0.41..8.43 
   Index Cond: ((tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range))
 Planning time: 3.445 ms
 Execution time: 35752.087 ms
+
+--
+
+Index Scan using dix_ls7_nbart_albers_time_lat_lon on dataset  (cost=0.41..8.43 rows=1 width=16) (actual time=244.934..50475.005 rows=1520 loops=1)
+  Index Cond: ((tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range))
+Planning time: 2.820 ms
+Execution time: 50475.801 ms
 
 
  */
@@ -582,6 +785,21 @@ Bitmap Heap Scan on eo_1_data  (cost=25656.09..29345.61 rows=951 width=16) (actu
 Planning time: 0.225 ms
 Execution time: 184422.665 ms
 
+--
+
+Bitmap Heap Scan on eo_1_data  (cost=25148.44..28413.16 rows=848 width=16) (actual time=36707.293..37398.758 rows=1520 loops=1)
+  Recheck Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange) AND (dataset_type_ref = 29))
+  Heap Blocks: exact=230
+  ->  BitmapAnd  (cost=25148.44..25148.44 rows=848 width=0) (actual time=36694.306..36694.306 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_data_cluster_index  (cost=0.00..1098.04 rows=10775 width=0) (actual time=35757.656..35757.656 rows=28041 loops=1)
+              Index Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange))
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_index  (cost=0.00..24049.73 rows=1302039 width=0) (actual time=935.529..935.529 rows=1357350 loops=1)
+              Index Cond: (dataset_type_ref = 29)
+Planning time: 0.343 ms
+Execution time: 37399.126 ms
+
+
+
  */
 
 ------
@@ -626,6 +844,16 @@ Bitmap Heap Scan on dataset  (cost=48895.22..4816291.12 rows=26470 width=16) (ac
 Planning time: 2.367 ms
 Execution time: 254311.442 ms
 
+--
+
+Index Scan using tix_active_dataset_type on dataset  (cost=0.44..2259000.29 rows=25146 width=16) (actual time=65.124..138990.114 rows=129669 loops=1)
+  Index Cond: (dataset_type_ref = 77)
+  Filter: (tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["2018-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange)
+  Rows Removed by Filter: 2637408
+Planning time: 1.785 ms
+Execution time: 138999.337 ms
+
+
  */
 
 
@@ -660,6 +888,20 @@ Bitmap Heap Scan on eo_1_data  (cost=50567.84..328285.94 rows=218086 width=16) (
         Index Cond: (tstzrange(from_dt, to_dt, '[]'::text) && '["2018-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange)
 Planning time: 1842.031 ms
 Execution time: 53916.836 ms
+
+--
+
+Bitmap Heap Scan on eo_1_data  (cost=49564.76..350983.44 rows=216722 width=16) (actual time=2281.769..30978.186 rows=129669 loops=1)
+  Recheck Cond: ((dataset_type_ref = 77) AND (archived IS NULL))
+  Rows Removed by Index Recheck: 449750
+  Filter: (tstzrange(from_dt, to_dt, '[]'::text) && '["2018-01-01 00:00:00+00","2018-12-31 23:59:59.999999+00")'::tstzrange)
+  Rows Removed by Filter: 2637408
+  Heap Blocks: exact=31127 lossy=26768
+  ->  Bitmap Index Scan on eo_1_dataset_type_ref_not_archived_index  (cost=0.00..49510.58 rows=2684553 width=0) (actual time=2262.294..2262.294 rows=2767077 loops=1)
+        Index Cond: (dataset_type_ref = 77)
+Planning time: 0.199 ms
+Execution time: 30988.125 ms
+
 
  */
 
@@ -707,6 +949,14 @@ Index Scan using dix_ls5_pq_albers_time_lat_lon on dataset  (cost=0.41..8.43 row
   Index Cond: ((tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range))
 Planning time: 3.534 ms
 Execution time: 32218.437 ms
+
+--
+
+Index Scan using dix_ls5_pq_albers_time_lat_lon on dataset  (cost=0.41..8.43 rows=1 width=16) (actual time=453.662..50320.807 rows=1416 loops=1)
+  Index Cond: ((tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range))
+Planning time: 2.760 ms
+Execution time: 50321.575 ms
+
 
  */
 
@@ -764,6 +1014,19 @@ Bitmap Heap Scan on eo_1_data  (cost=20021.91..22890.13 rows=736 width=16) (actu
 Planning time: 0.227 ms
 Execution time: 3310.775 ms
 
+--
+Bitmap Heap Scan on eo_1_data  (cost=21625.30..24421.59 rows=724 width=16) (actual time=24604.476..25312.346 rows=1416 loops=1)
+  Recheck Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange) AND (dataset_type_ref = 23))
+  Heap Blocks: exact=205
+  ->  BitmapAnd  (cost=21625.30..21625.30 rows=724 width=0) (actual time=24587.184..24587.184 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_data_cluster_index  (cost=0.00..1098.04 rows=10775 width=0) (actual time=23797.777..23797.778 rows=28041 loops=1)
+              Index Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange))
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_index  (cost=0.00..20526.65 rows=1111228 width=0) (actual time=788.548..788.548 rows=1133031 loops=1)
+              Index Cond: (dataset_type_ref = 23)
+Planning time: 0.258 ms
+Execution time: 25312.548 ms
+
+
  */
 
 ------
@@ -812,6 +1075,13 @@ Index Scan using dix_ls5_nbart_albers_time_lat_lon on dataset  (cost=0.41..8.43 
   Index Cond: ((tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range))
 Planning time: 3.404 ms
 Execution time: 31761.855 ms
+
+--
+
+Index Scan using dix_ls5_nbart_albers_time_lat_lon on dataset  (cost=0.41..8.43 rows=1 width=16) (actual time=234.073..47661.117 rows=1414 loops=1)
+  Index Cond: ((tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range))
+Planning time: 2.796 ms
+Execution time: 47661.831 ms
 
 
  */
@@ -868,6 +1138,20 @@ Bitmap Heap Scan on eo_1_data  (cost=21938.58..25086.41 rows=809 width=16) (actu
 Planning time: 0.284 ms
 Execution time: 3113.055 ms
 
+--
+
+Bitmap Heap Scan on eo_1_data  (cost=21726.66..24534.31 rows=727 width=16) (actual time=914.559..1415.371 rows=1414 loops=1)
+  Recheck Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange) AND (dataset_type_ref = 26))
+  Heap Blocks: exact=181
+  ->  BitmapAnd  (cost=21726.66..21726.66 rows=727 width=0) (actual time=890.604..890.604 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_data_cluster_index  (cost=0.00..1098.04 rows=10775 width=0) (actual time=62.574..62.574 rows=28041 loops=1)
+              Index Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange))
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_index  (cost=0.00..20628.01 rows=1116743 width=0) (actual time=827.332..827.332 rows=1177828 loops=1)
+              Index Cond: (dataset_type_ref = 26)
+Planning time: 0.236 ms
+Execution time: 1415.791 ms
+
+
  */
 
 ------
@@ -916,6 +1200,13 @@ Index Scan using dix_ls7_pq_albers_time_lat_lon on dataset  (cost=0.41..8.43 row
   Index Cond: ((tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range))
 Planning time: 4.106 ms
 Execution time: 36310.004 ms
+
+--
+Index Scan using dix_ls7_pq_albers_time_lat_lon on dataset  (cost=0.41..8.43 rows=1 width=16) (actual time=557.325..50161.900 rows=1520 loops=1)
+  Index Cond: ((tstzrange(agdc.common_timestamp((metadata #>> '{extent,from_dt}'::text[])), agdc.common_timestamp((metadata #>> '{extent,to_dt}'::text[])), '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ur,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ul,lat}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lat}'::text[]))::double precision), '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(LEAST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), GREATEST(((metadata #>> '{extent,coord,ul,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ur,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,ll,lon}'::text[]))::double precision, ((metadata #>> '{extent,coord,lr,lon}'::text[]))::double precision), '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range))
+Planning time: 2.825 ms
+Execution time: 50162.632 ms
+
 
  */
 
@@ -970,6 +1261,20 @@ Bitmap Heap Scan on eo_1_data  (cost=25584.21..29262.48 rows=949 width=16) (actu
               Index Cond: (dataset_type_ref = 22)
 Planning time: 0.326 ms
 Execution time: 3355.517 ms
+
+--
+Bitmap Heap Scan on eo_1_data  (cost=26287.71..29703.02 rows=888 width=16) (actual time=1055.365..1901.954 rows=1520 loops=1)
+  Recheck Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange) AND (dataset_type_ref = 22))
+  Rows Removed by Index Recheck: 1162
+  Heap Blocks: exact=318
+  ->  BitmapAnd  (cost=26287.71..26287.71 rows=888 width=0) (actual time=1055.175..1055.175 rows=0 loops=1)
+        ->  Bitmap Index Scan on eo_1_data_cluster_index  (cost=0.00..1098.04 rows=10775 width=0) (actual time=120.606..120.606 rows=28041 loops=1)
+              Index Cond: ((archived IS NULL) AND (agdc.float8range(lat_least, lat_greatest, '[]'::text) && '[-17.554459247492101,-17.361457459231584)'::agdc.float8range) AND (agdc.float8range(lon_least, lon_greatest, '[]'::text) && '[140.70680860879938,140.90732842760332)'::agdc.float8range) AND (tstzrange(from_dt, to_dt, '[]'::text) && '["1986-01-01 00:00:00+00","2019-01-01 23:59:59.999999+00")'::tstzrange))
+        ->  Bitmap Index Scan on eo_1_dataset_type_ref_index  (cost=0.00..25188.97 rows=1363805 width=0) (actual time=933.318..933.318 rows=1316846 loops=1)
+              Index Cond: (dataset_type_ref = 22)
+Planning time: 0.254 ms
+Execution time: 1902.389 ms
+
 
  */
 
@@ -1577,3 +1882,94 @@ testing pure lat and pure lon indexes
 ***
  */
 
+
+WITH RECURSIVE
+     base_query(
+       id,
+       metadata_type_ref,
+       dataset_type_ref,
+       metadata,
+       archived,
+       added,
+       added_by,
+       uris,
+       source_dataset_ref,
+       distance,
+       path
+       )
+       AS (
+       SELECT
+         agdc.dataset.id                        AS id,
+         agdc.dataset.metadata_type_ref         AS metadata_type_ref,
+         agdc.dataset.dataset_type_ref          AS dataset_type_ref,
+         agdc.dataset.metadata                  AS metadata,
+         agdc.dataset.archived                  AS archived,
+         agdc.dataset.added                     AS added,
+         agdc.dataset.added_by                  AS added_by,
+         array(
+             (
+               SELECT
+                   selected_dataset_location.uri_scheme ||
+                   ':' ||
+                   selected_dataset_location.uri_body AS anon_1
+               FROM agdc.dataset_location AS selected_dataset_location
+               WHERE selected_dataset_location.dataset_ref = agdc.dataset.id
+                 AND selected_dataset_location.archived IS NULL
+               ORDER BY selected_dataset_location.added DESC,
+                        selected_dataset_location.id DESC
+             )
+           )                                    AS uris,
+         agdc.dataset_source.source_dataset_ref AS source_dataset_ref,
+         1                                      AS distance,
+         agdc.dataset_source.classifier         AS path
+       FROM agdc.dataset
+              JOIN agdc.dataset_source
+                   ON agdc.dataset.id = agdc.dataset_source.dataset_ref
+       WHERE agdc.dataset.archived IS NULL
+         AND (
+           tstzrange(
+               agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, from_dt}')),
+               agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, to_dt}')),
+               '[]') &&
+           tstzrange(
+               '2018-01-01T00:00:00+00:00'::timestamptz,
+               '2018-12-31T23:59:59.999999+00:00'::timestamptz,
+               '[)'))
+         AND agdc.dataset.dataset_type_ref = 29
+       UNION ALL
+       SELECT
+         base_query.id                                            AS id,
+         base_query.metadata_type_ref                             AS metadata_type_ref,
+         base_query.dataset_type_ref                              AS dataset_type_ref,
+         base_query.metadata                                      AS metadata,
+         base_query.archived                                      AS archived,
+         base_query.added                                         AS added,
+         base_query.added_by                                      AS added_by,
+         base_query.uris                                          AS uris,
+         agdc.dataset_source.source_dataset_ref                   AS source_dataset_ref,
+         base_query.distance + 1                                  AS distance,
+         base_query.path || '.' || agdc.dataset_source.classifier AS path
+       FROM base_query
+              JOIN agdc.dataset_source
+                   ON base_query.source_dataset_ref = agdc.dataset_source.dataset_ref)
+SELECT DISTINCT
+  base_query.id,
+  base_query.metadata_type_ref,
+  base_query.dataset_type_ref,
+  base_query.metadata,
+  base_query.archived,
+  base_query.added,
+  base_query.added_by,
+  base_query.uris
+FROM base_query
+       JOIN agdc.dataset ON agdc.dataset.id = base_query.source_dataset_ref
+WHERE agdc.dataset.archived IS NULL
+  AND CAST((agdc.dataset.metadata #>> '{gqa, residual, iterative_mean, xy}') AS DOUBLE PRECISION) >= 0
+  AND CAST((agdc.dataset.metadata #>> '{gqa, residual, iterative_mean, xy}') AS DOUBLE PRECISION) < 1
+  AND (tstzrange(least(agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, from_dt}')),
+                       agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, center_dt}'))),
+                 greatest(agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, to_dt}')),
+                          agdc.common_timestamp((agdc.dataset.metadata #>> '{extent, center_dt}'))), '[]') &&
+       tstzrange('2018-01-01T00:00:00+00:00'::timestamptz, '2018-12-31T23:59:59.999999+00:00'::timestamptz,
+                 '[)'))
+  AND agdc.dataset.dataset_type_ref = 9;

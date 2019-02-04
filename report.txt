@@ -119,3 +119,78 @@ Regarding multiple indexes. You can have only one clustered index per table beca
 """
 
 https://bclennox.com/the-postgres-cluster-command
+
+
+
+
+
+
+
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+[2019-01-30 09:31:23] Connected
+sql> EXPLAIN ANALYSE
+       SELECT id
+       FROM agdc.eo_1_data
+       WHERE archived IS NULL
+         AND dataset_type_ref = 92
+         AND (agdc.float8range(lat_least, lat_greatest, '[]') &&
+              '[ -31, -30)')
+         AND (agdc.float8range(lon_least, lon_greatest, '[]') &&
+              '[132, 133)')
+[2019-01-30 09:32:34] 5 rows retrieved starting from 1 in 1 m 7 s 449 ms (execution: 1 m 7 s 28 ms, fetching: 421 ms)
+sql> CREATE INDEX eo_1_dataset_type_ref_index
+       ON agdc.eo_1_data
+         (dataset_type_ref)
+[2019-01-30 09:36:57] completed in 1 m 44 s 672 ms
+sql> CREATE INDEX eo_1_archived_index
+       ON agdc.eo_1_data
+         (archived)
+[2019-01-30 09:38:40] completed in 1 m 43 s 373 ms
+sql> CREATE INDEX eo_1_dataset_type_ref_not_archived_index
+       ON agdc.eo_1_data
+         (dataset_type_ref)
+     WHERE archived IS NULL
+[2019-01-30 09:40:28] completed in 1 m 41 s 371 ms
+sql> CLUSTER agdc.dataset USING agdc.tix_active_dataset_type
+[2019-01-30 09:40:37] [42601] ERROR: syntax error at or near "."
+[2019-01-30 09:40:37] Position: 32
+sql> CLUSTER agdc.dataset USING tix_active_dataset_type
+[2019-01-30 09:40:57] [0A000] ERROR: cannot cluster on partial index "tix_active_dataset_type"
+sql> CREATE INDEX dataset_dataset_type_ref_index
+       ON agdc.dataset
+         (dataset_type_ref)
+[2019-01-30 09:57:21] completed in 15 m 1 s 603 ms
+sql> CLUSTER agdc.dataset USING dataset_dataset_type_ref_index
+[2019-01-30 15:28:47] Cancelling...
+[2019-01-30 15:28:47] [57014] ERROR: canceling statement due to user request
+sql> CREATE INDEX cluster_index
+       ON agdc.eo_1_data
+         USING gist (archived,
+                     dataset_type_ref,
+                     agdc.float8range(lat_least, lat_greatest, '[]'::text),
+                     agdc.float8range(lon_least, lon_greatest, '[]'::text),
+                     tstzrange(from_dt, to_dt, '[]'::text))
+[2019-01-30 15:29:13] Cancelling...
+[2019-01-30 15:29:14] [57014] ERROR: canceling statement due to user request
+sql> CREATE INDEX eo_1_data_cluster_index
+       ON agdc.eo_1_data
+         USING gist (archived,
+                     dataset_type_ref,
+                     agdc.float8range(lat_least, lat_greatest, '[]'::text),
+                     agdc.float8range(lon_least, lon_greatest, '[]'::text),
+                     tstzrange(from_dt, to_dt, '[]'::text))
+[2019-01-30 18:28:56] completed in 2 h 59 m 27 s 423 ms
+sql> CREATE INDEX dataset_archived_dataset_type_ref_index
+       ON agdc.dataset
+         (archived, dataset_type_ref)
+[2019-01-30 18:46:23] completed in 17 m 26 s 558 ms
+sql> CLUSTER agdc.dataset USING dataset_archived_dataset_type_ref_index
+[2019-02-01 03:36:30] completed in 1 d 8 h 50 m 6 s 891 ms
+sql> analyse agdc.dataset
+[2019-02-01 03:39:32] completed in 3 m 1 s 927 ms
+sql> CLUSTER agdc.eo_1_data USING eo_1_data_cluster_index
+[2019-02-01 22:39:55] completed in 19 h 0 m 23 s 477 ms
+sql> analyse agdc.eo_1_data
+[2019-02-01 22:40:43] completed in 47 s 596 ms

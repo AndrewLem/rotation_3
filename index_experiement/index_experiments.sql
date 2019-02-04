@@ -115,11 +115,11 @@ create index dix_69_ul_lat
   on agdc.dataset (((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision))
   where (archived IS NULL);
 
-create index dix_0dataset_type_ul_lat
+create index dataset_type_ul_lat
   on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ul,lat}}'::text[])::double precision))
   where (archived IS NULL);
 
-create index dix_0dataset_type_ur_lat
+create index dataset_type_ur_lat
   on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ur,lat}}'::text[])::double precision))
   where (archived IS NULL);
 
@@ -129,7 +129,7 @@ file size before index:
 70.5 GB (75,719,622,656 bytes) on disk
  */
 
-create index dix_0dataset_type_ll_lat
+create index dataset_type_ll_lat
   on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ll,lat}}'::text[])::double precision))
   where (archived IS NULL);
 
@@ -139,33 +139,31 @@ file size after index:
 71.0 GB (76,285,714,432 bytes) on disk
  */
 
-create index dix_0dataset_type_lr_lat
+create index dataset_type_lr_lat
   on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,lr,lat}}'::text[])::double precision))
   where (archived IS NULL);
 
-
-
-create index dix_0dataset_type_ll_lon
+create index dataset_type_ll_lon
   on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ll,lon}}'::text[])::double precision))
   where (archived IS NULL);
 
-create index dix_0dataset_type_lr_lon
+create index dataset_type_lr_lon
   on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,lr,lon}}'::text[])::double precision))
   where (archived IS NULL);
 
-create index dix_0dataset_type_ul_lon
+create index dataset_type_ul_lon
   on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ul,lon}}'::text[])::double precision))
   where (archived IS NULL);
 
-create index dix_0dataset_type_ur_lon
+create index dataset_type_ur_lon
   on agdc.dataset (dataset_type_ref, ((metadata #>> '{{extent,coord,ur,lon}}'::text[])::double precision))
   where (archived IS NULL);
 
-create index dix_0dataset_type_to_dt
+create index dataset_type_to_dt
   on agdc.dataset (dataset_type_ref, agdc.common_timestamp(metadata #>> '{extent,from_dt}'::text[]))
   where (archived IS NULL);
 
-create index dix_0dataset_type_from_dt
+create index dataset_type_from_dt
   on agdc.dataset (dataset_type_ref, agdc.common_timestamp(metadata #>> '{extent,to_dt}'::text[]))
   where (archived IS NULL);
 
